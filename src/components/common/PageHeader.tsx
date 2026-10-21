@@ -14,7 +14,7 @@ interface PageHeaderProps {
 export default function PageHeader({ title, subtitle, badge, breadcrumbs }: PageHeaderProps) {
   return (
     <div className="bg-gradient-to-b from-[#EAF5F7] to-white border-b border-slate-200 py-10 sm:py-14">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-4">
+      <div className="site-container space-y-4">
         {/* Breadcrumb Navigation */}
         <nav aria-label="Breadcrumb" className="flex items-center gap-1.5 text-xs text-slate-500">
           <Link href="/" className="hover:text-[#308599] flex items-center gap-1 transition-colors">

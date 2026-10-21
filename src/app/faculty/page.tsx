@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
   GraduationCap,
@@ -36,7 +37,7 @@ export default function FacultyPage() {
         breadcrumbs={[{ label: 'Faculty & Mentors' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <main className="flex-1 site-container py-12 space-y-12">
         {/* Department Filter Pills */}
         <div className="flex flex-wrap items-center justify-center gap-2">
           {departments.map((dept) => (
@@ -149,6 +150,8 @@ export default function FacultyPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

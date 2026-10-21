@@ -5,6 +5,7 @@ import Link from 'next/link';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
   Calendar,
@@ -42,7 +43,7 @@ export default function NoticesPage() {
         breadcrumbs={[{ label: 'Notices & Circulars' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <main className="flex-1 site-container py-12 space-y-8">
         {/* Search & Filter Bar */}
         <div className="bg-white p-4 rounded-3xl border border-slate-200 shadow-xs flex flex-col sm:flex-row items-center justify-between gap-4">
           <div className="relative w-full sm:w-80">
@@ -152,6 +153,8 @@ export default function NoticesPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

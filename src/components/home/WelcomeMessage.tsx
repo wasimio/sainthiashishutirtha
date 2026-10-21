@@ -7,8 +7,8 @@ import { Quote, Heart, Award, Check } from 'lucide-react';
 export default function WelcomeMessage() {
   return (
     <section className="py-16 sm:py-20 bg-white border-b border-slate-100">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="bg-[#EAF5F7] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#A5D1DC]/60 relative overflow-hidden shadow-sm">
+      <div className="site-container">
+        <div className="bg-[#EAF5F7] rounded-3xl p-6 sm:p-10 lg:p-12 border border-[#A5D1DC]/60 relative overflow-hidden shadow-xs">
           {/* Subtle watermark / background element */}
           <div className="absolute top-4 right-6 text-[#A5D1DC]/20 pointer-events-none select-none">
             <Quote className="w-48 h-48 -mr-10 -mt-10 rotate-12" />

@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import {
   Calendar,
   ArrowLeft,
@@ -45,7 +46,7 @@ export default async function NoticeDetailPage({ params }: NoticeDetailPageProps
         ]}
       />
 
-      <main className="flex-1 max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-8">
+      <main className="flex-1 site-container max-w-4xl py-12 space-y-8">
         {/* Notice Reader Document Card */}
         <article className="bg-white rounded-3xl p-6 sm:p-10 border-2 border-slate-200 shadow-sm space-y-6">
           <div className="flex flex-wrap items-center justify-between gap-4 pb-4 border-b border-slate-100">
@@ -116,6 +117,8 @@ export default async function NoticeDetailPage({ params }: NoticeDetailPageProps
       </main>
 
       <Footer />
+
+      <QuickActionRail />
     </div>
   );
 }

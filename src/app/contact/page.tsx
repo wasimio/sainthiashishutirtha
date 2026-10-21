@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
   MapPin,
@@ -44,7 +45,7 @@ export default function ContactPage() {
         breadcrumbs={[{ label: 'Contact Us' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="flex-1 site-container py-12 space-y-16">
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12">
           {/* Contact Details & Campus Location */}
           <div className="lg:col-span-5 space-y-6">
@@ -259,6 +260,8 @@ export default function ContactPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

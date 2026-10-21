@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
   ShieldCheck,
@@ -30,7 +31,7 @@ export default function FacilitiesPage() {
         breadcrumbs={[{ label: 'Campus Facilities' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="flex-1 site-container py-12 space-y-16">
         {/* Safety & Hygiene Banner */}
         <section className="bg-[#243B43] text-white rounded-3xl p-8 sm:p-10 border border-slate-700 space-y-6">
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -163,6 +164,8 @@ export default function FacilitiesPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

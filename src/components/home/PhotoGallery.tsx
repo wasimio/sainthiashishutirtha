@@ -2,7 +2,8 @@
 
 import React, { useState } from 'react';
 import Image from 'next/image';
-import { Camera, X, ZoomIn } from 'lucide-react';
+import Link from 'next/link';
+import { Camera, X, ZoomIn, ArrowRight } from 'lucide-react';
 import { GALLERY_PHOTOS, GalleryPhoto } from '@/data/schoolData';
 
 export default function PhotoGallery() {
@@ -17,7 +18,7 @@ export default function PhotoGallery() {
 
   return (
     <section id="gallery" className="py-16 sm:py-24 bg-[#EAF5F7]/30 border-b border-slate-200">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="site-container">
         {/* Section Header */}
         <div className="text-center max-w-3xl mx-auto space-y-3 mb-12">
           <div className="inline-flex items-center gap-2 px-3 py-1 bg-white rounded-full text-xs font-bold text-[#308599] border border-[#A5D1DC] shadow-xs">
@@ -84,6 +85,17 @@ export default function PhotoGallery() {
               </div>
             </div>
           ))}
+        </div>
+
+        {/* View Full Gallery Link */}
+        <div className="mt-12 text-center">
+          <Link
+            href="/gallery"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#EAF5F7] text-[#308599] border border-[#A5D1DC] text-xs sm:text-sm font-bold rounded-xl shadow-2xs hover:shadow-sm transition-all"
+          >
+            <span>View Full Campus Photo Gallery</span>
+            <ArrowRight className="w-4 h-4" />
+          </Link>
         </div>
 
         {/* Lightbox Modal */}

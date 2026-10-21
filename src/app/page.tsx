@@ -3,7 +3,9 @@
 import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import HeroSection from '@/components/home/HeroSection';
+import SchoolAtAGlance from '@/components/home/SchoolAtAGlance';
 import WelcomeMessage from '@/components/home/WelcomeMessage';
 import AboutSection from '@/components/home/AboutSection';
 import AcademicPrograms from '@/components/home/AcademicPrograms';
@@ -36,6 +38,9 @@ export default function HomePage() {
       {/* 2. Hero Section */}
       <HeroSection onOpenAdmissionModal={() => handleOpenModal()} />
 
+      {/* 2b. Institutional Overview: School at a Glance */}
+      <SchoolAtAGlance />
+
       {/* 3. Welcome Message */}
       <WelcomeMessage />
 
@@ -65,6 +70,9 @@ export default function HomePage() {
 
       {/* 12. Professional Footer */}
       <Footer onOpenAdmissionModal={() => handleOpenModal()} />
+
+      {/* Fixed Desktop & Mobile Quick Action Rail */}
+      <QuickActionRail onOpenAdmissionModal={() => handleOpenModal()} />
 
       {/* Interactive Admission Enquiry Modal */}
       <AdmissionModal

@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import WelcomeMessage from '@/components/home/WelcomeMessage';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
@@ -42,7 +43,7 @@ export default function AboutPage() {
         breadcrumbs={[{ label: 'About Us' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="flex-1 site-container py-12 space-y-16">
         {/* Accreditation & Genesis */}
         <section className="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center">
           <div className="lg:col-span-7 space-y-4">
@@ -126,9 +127,6 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Welcome Message Component Reused */}
-        <WelcomeMessage />
-
         {/* Core Values 6-Grid */}
         <section className="space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -157,7 +155,12 @@ export default function AboutPage() {
         </section>
       </main>
 
+      {/* Headmaster's Welcome Desk */}
+      <WelcomeMessage />
+
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

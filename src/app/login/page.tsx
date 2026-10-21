@@ -89,7 +89,7 @@ export default function LoginPage() {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[#EAF5F7] via-slate-50 to-[#A5D1DC]/30 flex flex-col justify-between p-4 sm:p-6 lg:p-8">
       {/* Top Bar */}
-      <div className="max-w-7xl w-full mx-auto flex items-center justify-between">
+      <div className="site-container w-full flex items-center justify-between">
         <Link
           href="/"
           className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#243B43] hover:text-[#308599] transition-colors"
@@ -237,7 +237,7 @@ export default function LoginPage() {
       </div>
 
       {/* Bottom Legal Notice */}
-      <div className="max-w-7xl w-full mx-auto text-center text-[11px] text-slate-400">
+      <div className="site-container w-full text-center text-[11px] text-slate-400">
         © 2026 Sainthia Shishutirtha • Government Registered S/2L/14754 OF 2013-14 • Birbhum, West Bengal
       </div>
     </div>

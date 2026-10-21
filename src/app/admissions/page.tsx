@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import {
   Sparkles,
@@ -43,7 +44,7 @@ export default function AdmissionsPage() {
         breadcrumbs={[{ label: 'Admissions' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-16">
+      <main className="flex-1 site-container py-12 space-y-16">
         {/* Step-by-Step Admission Process */}
         <section className="space-y-6">
           <div className="text-center max-w-2xl mx-auto space-y-2">
@@ -215,6 +216,8 @@ export default function AdmissionsPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

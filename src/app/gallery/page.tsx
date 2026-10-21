@@ -5,6 +5,7 @@ import Image from 'next/image';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import AdmissionModal from '@/components/modals/AdmissionModal';
 import { X, ZoomIn } from 'lucide-react';
 import { GALLERY_PHOTOS, GalleryPhoto } from '@/data/schoolData';
@@ -31,7 +32,7 @@ export default function GalleryPage() {
         breadcrumbs={[{ label: 'Photo Gallery' }]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-10">
+      <main className="flex-1 site-container py-12 space-y-10">
         {/* Filter Pills */}
         <div className="flex flex-wrap items-center justify-center gap-2">
           {categories.map((cat) => (
@@ -132,6 +133,8 @@ export default function GalleryPage() {
       </main>
 
       <Footer onOpenAdmissionModal={() => setIsModalOpen(true)} />
+
+      <QuickActionRail onOpenAdmissionModal={() => setIsModalOpen(true)} />
 
       <AdmissionModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} />
     </div>

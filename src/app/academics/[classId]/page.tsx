@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation';
 import Navbar from '@/components/layout/Navbar';
 import Footer from '@/components/layout/Footer';
 import PageHeader from '@/components/common/PageHeader';
+import QuickActionRail from '@/components/common/QuickActionRail';
 import {
   Clock,
   CheckCircle2,
@@ -48,7 +49,7 @@ export default async function ClassDetailPage({ params }: ClassPageProps) {
         ]}
       />
 
-      <main className="flex-1 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 space-y-12">
+      <main className="flex-1 site-container py-12 space-y-12">
         {/* Key Metrics Bar */}
         <section className="grid grid-cols-2 sm:grid-cols-4 gap-4">
           <div className="bg-[#EAF5F7] p-5 rounded-2xl border border-[#A5D1DC]/60">
@@ -202,6 +203,8 @@ export default async function ClassDetailPage({ params }: ClassPageProps) {
       </main>
 
       <Footer />
+
+      <QuickActionRail />
     </div>
   );
 }

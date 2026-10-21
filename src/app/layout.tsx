@@ -1,21 +1,18 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta",
   subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
+  weight: ["400", "500", "600", "700", "800"],
+  display: "swap",
 });
 
 export const metadata: Metadata = {
-  title: "Sainthia Shishutirtha | Excellence in Foundational & Primary Education (KG – Class IV)",
+  title: "Sainthia Shishutirtha | Foundational & Primary School (KG – Class IV)",
   description:
-    "Official visual prototype for Sainthia Shishutirtha, Birbhum, West Bengal (Govt. Regd: S/2L/14754 OF 2013-14, U-DISE: 19082200103). Nurturing foundational excellence, joyful inquiry, and moral character since 2013.",
+    "Official website for Sainthia Shishutirtha, Birbhum, West Bengal (Govt. Regd: S/2L/14754 OF 2013-14, U-DISE: 19082200103). Nurturing foundational excellence, joyful inquiry, and moral character since 2013.",
   icons: {
     icon: "/logo.png",
     shortcut: "/logo.png",
@@ -39,9 +36,9 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={`${geistSans.variable} ${geistMono.variable} h-full antialiased`}
+      className={`${plusJakartaSans.variable} h-full antialiased`}
     >
-      <body className="min-h-full flex flex-col font-sans bg-white text-[#243B43]">
+      <body className="min-h-full flex flex-col font-sans bg-white text-[#243B43] selection:bg-[#A5D1DC]/40 selection:text-[#243B43]">
         {children}
       </body>
     </html>
