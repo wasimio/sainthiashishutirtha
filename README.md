@@ -1,121 +1,78 @@
-# Sainthia Shishutirtha — Website & Management Portal Prototype (Phase 1)
+# Sainthia Shishutirtha — Full-Stack Educational Platform & Management System
 
-This repository contains the **Phase 1 Visual Prototype** for **Sainthia Shishutirtha**, an early childhood and primary educational institution located in Sainthia, Birbhum, West Bengal (U-DISE: 19082200103, Govt. Regd: S/2L/14754 OF 2013-14).
-
-The prototype is designed for demonstration to the school's leadership and management council before full backend implementation.
+This repository contains the official website and school management platform for **Sainthia Shishutirtha**, an early childhood and primary educational institution located in Sainthia, Birbhum, West Bengal (U-DISE: 19082200103, Govt. Regd: S/2L/14754 OF 2013-14).
 
 ---
 
 ## 🎨 Brand Identity & Design System
 
-- **Official School Logo:** Preserved and integrated directly from the official school seal (`/public/logo.png`), featuring the green tree of wisdom, open book, and red circular border.
+- **Official School Seal:** Preserved and loaded directly from the official crest (`/public/logo.png`).
 - **Brand Colors:**
   - **Primary:** `#308599` (Deep educational teal)
   - **Secondary:** `#A5D1DC` (Soft ice blue / sky tint)
   - **Pale Background:** `#EAF5F7` (Gentle pale slate/cyan wash)
   - **Dark Text:** `#243B43` (Rich charcoal slate)
-  - **White:** `#FFFFFF`
-  - **Accents:** `#15803d` (School green) & `#D92525` (Crest crimson)
+  - **Pure White:** `#FFFFFF`
+  - **Accents:** `#15803d` (School green) & `#D92525` (Seal crimson)
 
 ---
 
-## 🏫 Public Website Features (All 12 Sections)
+## 🌐 Public Website Route Directory (Phase 1 Implemented)
 
-1. **Responsive Header & Navigation:**
-   - Top banner with contact numbers, official U-DISE registration, and admission notice ticker.
-   - Quick Prototype Switcher bar for switching between public site and admin/parent portals.
-   - School name, emblem, and fully responsive navigation with accessible mobile drawer.
-2. **Hero Section:**
-   - Bold headline, mission overview, U-DISE & Govt registration trust badges.
-   - Dual Call-to-Actions (*Apply for Admission 2025–26* and *Explore Classes*).
-   - High-fidelity imagery, 18:1 ratio stat, and floating session badge.
-3. **Welcome Message from the School:**
-   - Warm welcome message from the Headmaster's Desk outlining child-centric ethos and gentle guidance.
-4. **About the School:**
-   - 2013 founding history in Sainthia, Birbhum.
-   - Interactive tabbed presentation for **Mission**, **Vision**, and **Educational Philosophy**.
-5. **Classes & Academic Programmes:**
-   - Age brackets and curriculum highlights for:
-     - **Pre-Primary & Kindergarten (KG)** (Ages 3–5)
-     - **Junior Primary (Class I & II)** (Ages 6–7)
-     - **Senior Primary (Class III & IV)** (Ages 8–10)
-   - Interactive program switcher and continuous formative assessment overview.
-6. **Teaching Approach & Campus Facilities:**
-   - Interactive cards for child-centric classrooms, safe green playground, junior library & story nook, arts & cultural studio, and digital lab.
-   - Zero-compromise safety guarantee: 24x7 CCTV, single-gate access, female attendants, and RO water.
-7. **Why Choose Sainthia Shishutirtha:**
-   - 6 key pillars (Nurturing faculty, 18:1 ratio, bilingual competence, moral grounding, zero-stress, parent partnership).
-   - Real parent testimonials with verified ratings.
-8. **Interactive Photo Gallery:**
-   - Filterable by *All*, *Classroom*, *Sports*, *Culture*, and *Arts*.
-   - Click-to-enlarge Lightbox modal for high-resolution photo previews.
-9. **Announcements & Circulars:**
-   - Filterable notice board for notices, holiday updates, sports day, and exhibitions with modal preview.
-10. **Admission Enquiry Call-to-Action:**
-    - Visual 4-step admission journey (Enquiry → Campus Walkthrough → Friendly Interaction → Welcome Kit).
-11. **Contact Details & Location:**
-    - Address in Sainthia, Birbhum, contact telephone numbers, email, and visiting hours.
-    - Interactive Google Maps placeholder with directions callout.
-    - Interactive contact/enquiry form with validation and confirmation response.
-12. **Professional Footer:**
-    - Full accreditation details, quick links, timings, and prototype disclaimer.
+| Route | Page Title | Key Contents |
+|---|---|---|
+| [`/`](http://localhost:3000/) | **Home** | Comprehensive landing page with hero, welcome message, academic divisions, facilities, why choose us, photo gallery, notices, and contact. |
+| [`/about`](http://localhost:3000/about) | **About School** | Institutional history since 2013, accreditation credentials, Mission, Vision, Educational Philosophy, and Core Guiding Values. |
+| [`/academics`](http://localhost:3000/academics) | **Academics Overview** | Early childhood & primary curriculum overview, Foundational Literacy & Numeracy (FLN) philosophy, stress-free continuous assessment. |
+| [`/academics/[classId]`](http://localhost:3000/academics/pre-primary-kg) | **Class Details** | Dynamic class pages (`/academics/pre-primary-kg`, `/academics/junior-primary`, `/academics/senior-primary`) with curriculum breakdown, daily routines, and booklists. |
+| [`/faculty`](http://localhost:3000/faculty) | **Faculty & Mentors** | Leadership and faculty directory, teacher qualifications, experience years, specializations, and child psychology training. |
+| [`/facilities`](http://localhost:3000/facilities) | **Campus Facilities** | Detailed infrastructure showcase: smart classrooms, safe playground, junior library, arts studio, IT lab, 24x7 CCTV, RO water, and sick bay. |
+| [`/gallery`](http://localhost:3000/gallery) | **Photo Gallery** | Filterable gallery (*All*, *Classroom*, *Sports*, *Culture*, *Arts*) with an interactive click-to-enlarge Lightbox modal. |
+| [`/admissions`](http://localhost:3000/admissions) | **Admissions 2025–26** | 4-step admission journey, class-wise age criteria & cutoffs, required documents checklist, transparent fee overview, and online enquiry. |
+| [`/notices`](http://localhost:3000/notices) | **Notices & Circulars** | Filterable notice board with category badges (*Notice*, *Event*, *Academic*), search bar, and circular details. |
+| [`/notices/[id]`](http://localhost:3000/notices/n-1) | **Notice Reader** | Dynamic notice detail reader with official issuance metadata and full circular text. |
+| [`/contact`](http://localhost:3000/contact) | **Contact & Location** | Campus address in Sainthia, Birbhum, contact telephone numbers, email, visiting hours, interactive map card, and enquiry form. |
+| [`/login`](http://localhost:3000/login) | **Unified Portal Login** | Role-tailored login screen with quick-switching demonstration credentials for Management, Principal, Teachers, and Parents. |
 
 ---
 
-## 📱 Additional Prototype Screens
+## 🛡️ School Management Prototype Portals
 
-- **Admin Dashboard** (`/admin`):
-  - Overview of student enrollment (342 students), staff counts, attendance trends, and admissions pipeline.
-  - Class-wise capacity visual bars (KG to Class IV).
-  - Quick action center (issue circulars, ID cards, export reports).
-- **Admission Applications Table** (`/admin/admissions`):
-  - Filterable by Grade (KG to Class IV) and Status (Under Review, Interview Scheduled, Approved, Enrolled).
-  - Search by student or parent name.
-  - Interactive Application Review Drawer with workflow status updates.
-- **Parent Dashboard** (`/parent`):
-  - Student identity card for fictional student **Aarav Sen (Class II-B, Roll No. 14)**.
-  - Today's 5-period routine/timetable.
-  - Teacher diary remarks, tuition fee status, and attendance score.
-- **Homework & Tasks** (`/parent/homework`):
-  - Subject-wise assignments with instructions, due dates, and interactive "Mark as Completed" toggles.
-  - Mock downloadable worksheets and digital teacher note submission.
-- **Attendance Record** (`/parent/attendance`):
-  - Monthly attendance calendar with color-coded status badges.
-  - Interactive leave application request form.
+| Route | Portal Name | Description |
+|---|---|---|
+| [`/admin`](http://localhost:3000/admin) | **Admin Dashboard** | 342 Enrolled students, 22 staff members, 96.2% daily attendance, class-wise capacity visual bars, administrative quick-action center. |
+| [`/admin/admissions`](http://localhost:3000/admin/admissions) | **Admissions Table** | Searchable & filterable applications table by Grade (KG–IV) and Status (*Under Review*, *Interview Scheduled*, *Approved*, *Enrolled*), with application review drawer. |
+| [`/parent`](http://localhost:3000/parent) | **Parent Portal Overview** | Profile for fictional student **Aarav Sen (Class II-B, Roll No. 14)**, 5-period daily routine, teacher diary remarks, fee clearance status. |
+| [`/parent/homework`](http://localhost:3000/parent/homework) | **Homework & Tasks** | Subject-wise homework cards with teacher instructions, interactive "Mark as Completed" state toggles, and digital diary note submission. |
+| [`/parent/attendance`](http://localhost:3000/parent/attendance) | **Attendance Ledger** | Monthly presence calendar (95.2% rate), attendance rules, and interactive student leave request form with simulated confirmation. |
 
 ---
 
-## 🚀 Local Setup Instructions
+## 🚀 Local Development Setup
 
 ### Prerequisites
-- [Node.js](https://nodejs.org/) (v18.18.0 or later, v20+ / v22 recommended)
-- `npm` (v9 or later)
+- [Node.js](https://nodejs.org/) (`v18.18+`, `v20+` or `v22` recommended)
+- `npm` (`v9+`)
 
-### Steps to Run Locally
+### Steps to Run
 
-1. **Clone or open the directory:**
-   ```bash
-   cd sainthiashishutirtha
+1. Open a terminal in the project directory:
+   ```powershell
+   cd d:\sainthiashishutirtha
    ```
-
-2. **Install dependencies:**
-   ```bash
+2. Install dependencies:
+   ```powershell
    npm install
    ```
-
-3. **Start the local development server:**
-   ```bash
+3. Run the development server:
+   ```powershell
    npm run dev
    ```
-
-4. **Open in your browser:**
-   Visit [http://localhost:3000](http://localhost:3000)
-
-5. **To test production build:**
-   ```bash
-   npm run build
-   npm run start
-   ```
+4. Access the application in your browser:
+   - **Public Website:** [http://localhost:3000](http://localhost:3000)
+   - **Login Portal:** [http://localhost:3000/login](http://localhost:3000/login)
+   - **Admin Portal:** [http://localhost:3000/admin](http://localhost:3000/admin)
+   - **Parent Portal:** [http://localhost:3000/parent](http://localhost:3000/parent)
 
 ---
 

@@ -1,6 +1,7 @@
 'use client';
 
 import React from 'react';
+import Link from 'next/link';
 import Image from 'next/image';
 import {
   Sparkles,
@@ -93,13 +94,13 @@ export default function HeroSection({ onOpenAdmissionModal }: HeroSectionProps) 
                 <ArrowRight className="w-4 h-4" />
               </button>
 
-              <a
-                href="#programs"
+              <Link
+                href="/academics"
                 className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-[#EAF5F7] text-[#243B43] border-2 border-[#A5D1DC] text-sm font-bold rounded-xl transition-all"
               >
                 <BookOpen className="w-4 h-4 text-[#308599]" />
                 <span>Explore Classes (KG – IV)</span>
-              </a>
+              </Link>
             </div>
 
             {/* Quick Stats Banner */}

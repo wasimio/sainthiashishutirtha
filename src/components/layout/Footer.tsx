@@ -30,7 +30,7 @@ export default function Footer({ onOpenAdmissionModal }: FooterProps) {
               <div className="w-14 h-14 rounded-full bg-white p-1 shrink-0 overflow-hidden shadow-md">
                 <Image
                   src="/logo.png"
-                  alt="Sainthia Shishutirtha Logo"
+                  alt="Sainthia Shishutirtha Official Seal"
                   width={56}
                   height={56}
                   className="w-full h-full object-contain"
@@ -69,31 +69,31 @@ export default function Footer({ onOpenAdmissionModal }: FooterProps) {
             </h4>
             <ul className="space-y-2.5 text-xs text-slate-300">
               <li>
-                <Link href="/#programs" className="hover:text-[#A5D1DC] flex items-center justify-between group">
+                <Link href="/academics/pre-primary-kg" className="hover:text-[#A5D1DC] flex items-center justify-between group">
                   <span>Pre-Primary & Nursery</span>
                   <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-white">Ages 3–4</span>
                 </Link>
               </li>
               <li>
-                <Link href="/#programs" className="hover:text-[#A5D1DC] flex items-center justify-between group">
+                <Link href="/academics/pre-primary-kg" className="hover:text-[#A5D1DC] flex items-center justify-between group">
                   <span>Kindergarten (KG)</span>
                   <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-white">Ages 4–5</span>
                 </Link>
               </li>
               <li>
-                <Link href="/#programs" className="hover:text-[#A5D1DC] flex items-center justify-between group">
+                <Link href="/academics/junior-primary" className="hover:text-[#A5D1DC] flex items-center justify-between group">
                   <span>Junior Primary (Class I – II)</span>
                   <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-white">Ages 6–7</span>
                 </Link>
               </li>
               <li>
-                <Link href="/#programs" className="hover:text-[#A5D1DC] flex items-center justify-between group">
+                <Link href="/academics/senior-primary" className="hover:text-[#A5D1DC] flex items-center justify-between group">
                   <span>Senior Primary (Class III – IV)</span>
                   <span className="text-[10px] bg-white/10 px-1.5 py-0.5 rounded text-slate-400 group-hover:text-white">Ages 8–10</span>
                 </Link>
               </li>
               <li>
-                <Link href="/#facilities" className="hover:text-[#A5D1DC] flex items-center gap-1 text-[#A5D1DC] pt-2">
+                <Link href="/facilities" className="hover:text-[#A5D1DC] flex items-center gap-1 text-[#A5D1DC] pt-2">
                   <span>Explore Campus Facilities</span>
                   <ArrowRight className="w-3 h-3" />
                 </Link>
@@ -101,53 +101,63 @@ export default function Footer({ onOpenAdmissionModal }: FooterProps) {
             </ul>
           </div>
 
-          {/* Col 3: Quick Navigation & Previews */}
+          {/* Col 3: Quick Navigation & Portals */}
           <div>
             <h4 className="text-sm font-bold text-white uppercase tracking-wider mb-4 border-l-2 border-[#308599] pl-2.5">
-              Prototype Portals
+              Quick Navigation
             </h4>
             <ul className="space-y-2 text-xs text-slate-300">
               <li>
-                <Link href="/admin" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
-                  <span>Admin Dashboard Preview</span>
-                </Link>
-              </li>
-              <li>
-                <Link href="/admin/admissions" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
+                <Link href="/about" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
                   <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
-                  <span>Admissions Applications Table</span>
+                  <span>About School History & Ethos</span>
                 </Link>
               </li>
               <li>
-                <Link href="/parent" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-400"></span>
-                  <span>Parent Portal Preview</span>
+                <Link href="/faculty" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+                  <span>Faculty & Educators Roster</span>
                 </Link>
               </li>
               <li>
-                <Link href="/parent/homework" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400"></span>
-                  <span>Homework & Syllabus Tasks</span>
+                <Link href="/gallery" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+                  <span>Campus Photo Gallery</span>
                 </Link>
               </li>
               <li>
-                <Link href="/parent/attendance" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
-                  <span className="w-1.5 h-1.5 rounded-full bg-sky-400"></span>
-                  <span>Attendance Calendar System</span>
+                <Link href="/notices" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-400"></span>
+                  <span>Circulars & Event Notices</span>
+                </Link>
+              </li>
+              <li>
+                <Link href="/login" className="hover:text-[#A5D1DC] flex items-center gap-1.5">
+                  <span className="w-1.5 h-1.5 rounded-full bg-amber-400"></span>
+                  <span>School Portal Login</span>
                 </Link>
               </li>
             </ul>
 
             <div className="mt-4 pt-3 border-t border-white/10">
-              <button
-                type="button"
-                onClick={onOpenAdmissionModal}
-                className="w-full text-center py-2 px-3 bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-lg transition-colors flex items-center justify-center gap-1.5"
-              >
-                <span>Admission Enquiry 2025–26</span>
-                <ExternalLink className="w-3 h-3" />
-              </button>
+              {onOpenAdmissionModal ? (
+                <button
+                  type="button"
+                  onClick={onOpenAdmissionModal}
+                  className="w-full text-center py-2 px-3 bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <span>Admission Enquiry 2025–26</span>
+                  <ExternalLink className="w-3 h-3" />
+                </button>
+              ) : (
+                <Link
+                  href="/admissions"
+                  className="w-full text-center py-2 px-3 bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-xl transition-colors flex items-center justify-center gap-1.5"
+                >
+                  <span>Admission Enquiry 2025–26</span>
+                  <ExternalLink className="w-3 h-3" />
+                </Link>
+              )}
             </div>
           </div>
 
@@ -178,7 +188,7 @@ export default function Footer({ onOpenAdmissionModal }: FooterProps) {
         </div>
 
         {/* Prototype Disclaimer Box */}
-        <div className="mt-8 p-3 rounded-lg bg-black/20 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
+        <div className="mt-8 p-3.5 rounded-2xl bg-black/20 border border-white/10 flex flex-col sm:flex-row items-center justify-between gap-3 text-xs text-slate-400">
           <div className="flex items-center gap-2">
             <ShieldAlert className="w-4 h-4 text-amber-400 shrink-0" />
             <span>
@@ -196,7 +206,7 @@ export default function Footer({ onOpenAdmissionModal }: FooterProps) {
           <div className="flex items-center gap-4 text-[11px]">
             <span>Government Registered School</span>
             <span>•</span>
-            <span>U-DISE: 19082200103</span>
+            <span>U-DISE: {SCHOOL_INFO.udiseNo}</span>
             <span>•</span>
             <span>Sainthia, Birbhum</span>
           </div>

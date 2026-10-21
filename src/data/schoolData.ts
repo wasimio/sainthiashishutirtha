@@ -9,6 +9,41 @@ export interface AcademicProgram {
   keySubjects: string[];
   badgeColor: string;
   iconName: string;
+  slug: string;
+}
+
+export interface ClassDetail {
+  slug: string;
+  title: string;
+  gradeRange: string;
+  ageRequirement: string;
+  schoolHours: string;
+  classTeacher: string;
+  studentCapacity: number;
+  overview: string;
+  learningOutcomes: string[];
+  curriculumBreakdown: {
+    subject: string;
+    description: string;
+    weeklyHours: string;
+  }[];
+  dailyRoutine: {
+    time: string;
+    activity: string;
+  }[];
+  booklistHighlights: string[];
+}
+
+export interface FacultyMember {
+  id: string;
+  name: string;
+  role: string;
+  department: 'Leadership' | 'Primary' | 'Pre-Primary' | 'Activity & Physical';
+  qualification: string;
+  experienceYears: number;
+  bio: string;
+  image: string;
+  specialization: string;
 }
 
 export interface Facility {
@@ -27,6 +62,8 @@ export interface NoticeItem {
   category: 'Notice' | 'Event' | 'Holiday' | 'Academic';
   isImportant?: boolean;
   description: string;
+  fullContent?: string;
+  issuedBy?: string;
   downloadUrl?: string;
 }
 
@@ -65,6 +102,7 @@ export const SCHOOL_INFO = {
 export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   {
     id: "pre-primary-kg",
+    slug: "pre-primary-kg",
     name: "Pre-Primary & Kindergarten (KG)",
     gradeRange: "Nursery to KG",
     ageGroup: "3 to 5 Years",
@@ -82,6 +120,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   },
   {
     id: "primary-class-1-2",
+    slug: "junior-primary",
     name: "Junior Primary (Class I & Class II)",
     gradeRange: "Class I – Class II",
     ageGroup: "6 to 7 Years",
@@ -99,6 +138,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   },
   {
     id: "senior-primary-class-3-4",
+    slug: "senior-primary",
     name: "Senior Primary (Class III & Class IV)",
     gradeRange: "Class III – Class IV",
     ageGroup: "8 to 10 Years",
@@ -113,6 +153,227 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     keySubjects: ["English Literature & Applied Grammar", "First Language (Bengali / Hindi)", "Mathematics & Mental Arithmetic", "Science & Nature Exploration", "Social Studies", "Computer Studies", "Arts & Physical Education"],
     badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
     iconName: "GraduationCap"
+  }
+];
+
+export const CLASS_DETAILS: Record<string, ClassDetail> = {
+  "pre-primary-kg": {
+    slug: "pre-primary-kg",
+    title: "Pre-Primary & Kindergarten (KG)",
+    gradeRange: "Nursery & KG",
+    ageRequirement: "3 to 5 Years as of 1st January of admission year",
+    schoolHours: "8:30 AM – 11:45 AM (Monday to Friday)",
+    classTeacher: "Mrs. Anindita Ghosh & Mrs. Rina Pal",
+    studentCapacity: 65,
+    overview: "The Kindergarten years at Sainthia Shishutirtha form the gentle emotional bridge from home to formal school life. Using play-way Montessori methodologies, children develop communication, self-care routines, bilingual phonetic recognition, and joyful socialization in an intimidation-free setting.",
+    learningOutcomes: [
+      "Clear pronunciation of phonetic sounds and sight words",
+      "Counting, numeral recognition (1-100), and simple grouping",
+      "Fine motor control for pencil grip, paper tearing, and clay modeling",
+      "Social confidence in greeting teachers and sharing toys with peers",
+      "Confidence in reciting nursery rhymes in both English and Bengali"
+    ],
+    curriculumBreakdown: [
+      { subject: "Phonics & English Pre-Reading", description: "Letter sounds, picture association, storytelling, and early vocabulary building.", weeklyHours: "5 Hours" },
+      { subject: "Play Numeracy & Logic", description: "Counting beads, shape identification, sorting, size comparisons, and number tracing.", weeklyHours: "4 Hours" },
+      { subject: "First Language (Bengali/Hindi)", description: "Vowels and basic consonants through songs, rhymes, and pictorial flashcards.", weeklyHours: "4 Hours" },
+      { subject: "Creative Arts & Motor Play", description: "Crayons, finger painting, dough sculpting, action songs, and outdoor swing play.", weeklyHours: "4 Hours" },
+      { subject: "Life Skills & Etiquette", description: "Handwashing hygiene, table manners during tiffin, packing school bags neatly.", weeklyHours: "2 Hours" }
+    ],
+    dailyRoutine: [
+      { time: "8:30 AM", activity: "Warm welcome, greeting & bag arrangement" },
+      { time: "8:45 AM", activity: "Morning prayer, gentle stretch & circle time" },
+      { time: "9:15 AM", activity: "Phonics & early literacy activities" },
+      { time: "10:00 AM", activity: "Supervised tiffin break & clean-up habits" },
+      { time: "10:30 AM", activity: "Playground games, sand play & swings" },
+      { time: "11:00 AM", activity: "Storybook reading, rhyme recitation & arts" },
+      { time: "11:45 AM", activity: "Safe single-gate dispersal to parents" }
+    ],
+    booklistHighlights: [
+      "Hopscotch Phonics Primer (Early Childhood Edition)",
+      "My Fun Number World (Pre-Math Concepts)",
+      "সহজ ছড়া ও ছবি (চিত্রসহ বাংলা বর্ণমালা)",
+      "Little Artists Drawing & Coloring Book"
+    ]
+  },
+  "junior-primary": {
+    slug: "junior-primary",
+    title: "Junior Primary (Class I & Class II)",
+    gradeRange: "Class I – Class II",
+    ageRequirement: "6 to 7 Years as of 1st January of admission year",
+    schoolHours: "8:00 AM – 1:00 PM (Monday to Friday)",
+    classTeacher: "Mrs. S. Ganguly (Class II-B) & Mr. T. Roy (Class I-A)",
+    studentCapacity: 60,
+    overview: "Junior Primary focuses on solidifying foundational literacy and numeracy (FLN) as mandated by modern child-development guidelines. Children master cursive penmanship, mental arithmetic, and environmental observation with abundant praise and continuous encouragement.",
+    learningOutcomes: [
+      "Fluency in reading early chapter books and reading aloud with expression",
+      "Mastery of addition, subtraction, simple word problems, and multiplication tables up to 10",
+      "Accurate sentence formation and short creative paragraphs in English and Bengali",
+      "Awareness of nature, seasonal cycles, plants, animals, and civic hygiene",
+      "Basic understanding of digital computers through visual touchscreens and keyboard games"
+    ],
+    curriculumBreakdown: [
+      { subject: "English Literature & Grammar", description: "Guided reading, sentence construction, vocabulary notebooks, and cursive writing.", weeklyHours: "6 Hours" },
+      { subject: "First Language (সহজ পাঠ / সাহিত্য)", description: "Rabindranath Tagore's Sahaj Path Part 1 & 2, reading fluency, and dictation.", weeklyHours: "5 Hours" },
+      { subject: "Mathematics & Mental Math", description: "2-digit arithmetic, place value, money calculation, time reading, and mental puzzles.", weeklyHours: "6 Hours" },
+      { subject: "Environmental Studies (EVS)", description: "Our body, family, neighborhood, plants, water conservation, and clean food habits.", weeklyHours: "4 Hours" },
+      { subject: "Computer Studies", description: "Introduction to monitor, CPU, mouse navigation, and interactive typing software.", weeklyHours: "2 Hours" },
+      { subject: "Co-Curricular Arts & P.E.", description: "Watercolors, vocal music, morning gymnastics, and team races.", weeklyHours: "3 Hours" }
+    ],
+    dailyRoutine: [
+      { time: "8:00 AM", activity: "Assembly, national anthem, pledge & thought for the day" },
+      { time: "8:20 AM", activity: "Period 1: English Language & Phonics" },
+      { time: "9:05 AM", activity: "Period 2: Mental Mathematics & Problem Solving" },
+      { time: "9:50 AM", activity: "Period 3: Bengali / Hindi Literature" },
+      { time: "10:35 AM", activity: "Recess: Nutritious tiffin & outdoor playground play" },
+      { time: "11:05 AM", activity: "Period 4: Environmental Studies (EVS) / Nature Walk" },
+      { time: "11:50 AM", activity: "Period 5: Drawing / Vocal Music / Computer Lab" },
+      { time: "12:35 PM", activity: "Diary writing, teacher remarks review & packing" },
+      { time: "1:00 PM", activity: "Gate dispersal with teacher escorts" }
+    ],
+    booklistHighlights: [
+      "New Broadway English Coursebook & Workbook (Oxford/Foundation)",
+      "সহজ পাঠ - প্রথম ও দ্বিতীয় ভাগ (রবীন্দ্রনাথ ঠাকুর)",
+      "Targeting Mathematics (Foundational FLN Series)",
+      "Green Circle: Exploring Environmental Science",
+      "Junior Touch: Computer Fundamentals for Primary"
+    ]
+  },
+  "senior-primary": {
+    slug: "senior-primary",
+    title: "Senior Primary (Class III & Class IV)",
+    gradeRange: "Class III – Class IV",
+    ageRequirement: "8 to 10 Years as of 1st January of admission year",
+    schoolHours: "8:00 AM – 1:30 PM (Monday to Friday)",
+    classTeacher: "Mr. B. Pal & Mrs. A. Sen",
+    studentCapacity: 60,
+    overview: "Senior Primary prepares young students to become independent thinkers, fluent communicators, and disciplined learners. With specialized subject periods, weekly science experiments, debate clubs, and mental math Olympiad challenges, graduates transition seamlessly into leading secondary schools.",
+    learningOutcomes: [
+      "Independent essay writing, reading comprehension, and confident spoken English presentations",
+      "Confidence with long division, fractions, geometry basics, and data handling",
+      "Scientific method comprehension: observing, hypothesizing, and drawing conclusions",
+      "Respect for cultural heritage, Indian history, geography, and civic responsibility",
+      "Team collaboration in group projects, sports relay events, and annual exhibitions"
+    ],
+    curriculumBreakdown: [
+      { subject: "Advanced English Language", description: "Grammar, syntax, essay writing, comprehension passages, and recitation.", weeklyHours: "6 Hours" },
+      { subject: "Bengali / Hindi First Language", description: "Classical stories, poetry appreciation, grammatical rules, and spellings.", weeklyHours: "5 Hours" },
+      { subject: "Mathematics & Analytical Logic", description: "4-digit operations, fractions, perimeter, time measurement, and unitary method.", weeklyHours: "6 Hours" },
+      { subject: "General Science & Experiments", description: "Living organisms, matter, light, sound, simple machines, and laboratory models.", weeklyHours: "4 Hours" },
+      { subject: "Social Studies & Civics", description: "Map reading, Indian heritage, Birbhum district history, and community helpers.", weeklyHours: "3 Hours" },
+      { subject: "Information Technology", description: "Typing efficiency, basic MS Paint/Word concepts, and digital ethics.", weeklyHours: "2 Hours" },
+      { subject: "Physical Training & Yoga", description: "Sprint races, yoga asanas, football fundamentals, and teamwork drills.", weeklyHours: "3 Hours" }
+    ],
+    dailyRoutine: [
+      { time: "8:00 AM", activity: "Assembly, student news reading & physical drill" },
+      { time: "8:25 AM", activity: "Period 1: Mathematics & Mental Arithmetic" },
+      { time: "9:10 AM", activity: "Period 2: English Literature & Creative Writing" },
+      { time: "9:55 AM", activity: "Period 3: General Science / Demonstration Lab" },
+      { time: "10:40 AM", activity: "Recess: Wholesome tiffin & sports grounds" },
+      { time: "11:10 AM", activity: "Period 4: Bengali / Hindi Language & Grammar" },
+      { time: "11:55 AM", activity: "Period 5: Social Studies & Heritage" },
+      { time: "12:40 PM", activity: "Period 6: Computer Lab / Art & Craft Studio" },
+      { time: "1:25 PM", activity: "Diary endorsement & orderly dismissal" }
+    ],
+    booklistHighlights: [
+      "Oxford Reading Circle & Everyday Grammar",
+      "সাহিত্য সঞ্চয়ন ও বাংলা ব্যাকরণ মঞ্জুষা",
+      "Mathematics in Action (Class III/IV Standard)",
+      "Young Scientists: Interactive Science Discovery",
+      "My Land & My People: Primary Social Studies",
+      "Byte by Byte: Computer Applications"
+    ]
+  }
+};
+
+export const FACULTY_MEMBERS: FacultyMember[] = [
+  {
+    id: "fac-1",
+    name: "Sri Debabrata Roy",
+    role: "Headmaster & Academic Director",
+    department: "Leadership",
+    qualification: "M.A., B.Ed., Diploma in Early Childhood Education",
+    experienceYears: 18,
+    bio: "With nearly two decades of educational leadership, Sri Roy has guided Sainthia Shishutirtha since its inception in 2013, championing child-centric schooling without emotional stress.",
+    image: "https://images.unsplash.com/photo-1544717305-2782549b5136?auto=format&fit=crop&w=600&q=80",
+    specialization: "Educational Administration & Child Psychology"
+  },
+  {
+    id: "fac-2",
+    name: "Smt. Shampa Ganguly",
+    role: "Senior Primary Coordinator & Class Teacher (Class II)",
+    department: "Primary",
+    qualification: "B.A. (Hons. English), B.Ed.",
+    experienceYears: 12,
+    bio: "Passionate English mentor known for transforming reluctant readers into eager storytellers through interactive phonics games and expressive dramatization.",
+    image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=600&q=80",
+    specialization: "Phonics, English Literature & Creative Penmanship"
+  },
+  {
+    id: "fac-3",
+    name: "Sri Tarun Roy",
+    role: "Mathematics & Mental Arithmetic Faculty",
+    department: "Primary",
+    qualification: "B.Sc. (Mathematics), D.El.Ed.",
+    experienceYears: 10,
+    bio: "Specializes in demystifying mathematics for young minds through tactile abacus counters, number grids, and joyful mental math puzzles.",
+    image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=600&q=80",
+    specialization: "Conceptual Math & FLN Numeracy"
+  },
+  {
+    id: "fac-4",
+    name: "Smt. Mita Mukherjee",
+    role: "First Language (Bengali) Lead Mentor",
+    department: "Primary",
+    qualification: "M.A. (Bengali), B.Ed.",
+    experienceYears: 14,
+    bio: "Brings Bengal's rich literary heritage to life in the classroom, instilling correct pronunciation, spelling accuracy, and deep appreciation for Sahaj Path.",
+    image: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=600&q=80",
+    specialization: "Bengali Literature & Recitation"
+  },
+  {
+    id: "fac-5",
+    name: "Smt. Anindita Ghosh",
+    role: "Kindergarten & Pre-Primary Coordinator",
+    department: "Pre-Primary",
+    qualification: "B.A., Montessori Certified Educator",
+    experienceYears: 9,
+    bio: "Expert in early childhood sensory exploration, circle time activities, fine motor development, and gentle behavioral reinforcement.",
+    image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=600&q=80",
+    specialization: "Early Childhood Montessori & Sensory Learning"
+  },
+  {
+    id: "fac-6",
+    name: "Smt. Rina Pal",
+    role: "Nursery & Kindergarten Mentor",
+    department: "Pre-Primary",
+    qualification: "B.Sc., Nursery Teacher Training (NTT)",
+    experienceYears: 7,
+    bio: "Beloved for her patient, motherly approach that makes first-time schoolgoers feel completely secure, joyful, and excited to return every morning.",
+    image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=600&q=80",
+    specialization: "Toddler Transition & Language Readiness"
+  },
+  {
+    id: "fac-7",
+    name: "Sri Bimal Pal",
+    role: "Fine Arts, Crafts & Cultural Instructor",
+    department: "Activity & Physical",
+    qualification: "B.F.A. (Visual Arts), Diploma in Indian Folk Art",
+    experienceYears: 11,
+    bio: "Nurtures creative imagination through watercolors, clay models, festival decorations, and cultural stage decor for school celebrations.",
+    image: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=600&q=80",
+    specialization: "Visual Arts, Clay Sculpting & Stage Design"
+  },
+  {
+    id: "fac-8",
+    name: "Smt. Aparna Sen",
+    role: "Science & Nature Exploration Mentor",
+    department: "Primary",
+    qualification: "B.Sc. (Botany), B.Ed.",
+    experienceYears: 8,
+    bio: "Conducts hands-on nature discovery sessions, garden walks, and simple classroom science demonstrations that stimulate curiosity.",
+    image: "https://images.unsplash.com/photo-1567532939604-b6b5b0db2604?auto=format&fit=crop&w=600&q=80",
+    specialization: "Environmental Studies (EVS) & Primary Science"
   }
 ];
 
@@ -208,6 +469,8 @@ export const NOTICES_AND_EVENTS: NoticeItem[] = [
     category: "Notice",
     isImportant: true,
     description: "Forms are available at the school office and online portal. Limited seats available for Kindergarten and Class I. Early registration recommended.",
+    fullContent: "The Admission Committee of Sainthia Shishutirtha hereby announces the commencement of registration for the Academic Session 2025–2026 across Kindergarten (KG), Class I, Class II, Class III, and Class IV. Parents seeking admission for their wards are advised to complete the online enquiry or collect the physical prospectus from the school office between 8:30 AM and 1:30 PM on all working days. Documents required include child's birth certificate copy, 3 passport photographs, previous school report card (if applicable), and parent identity proof. Please note that batch sizes are capped strictly at 30 students per section.",
+    issuedBy: "Office of the Headmaster & Admissions Council",
     downloadUrl: "#"
   },
   {
@@ -217,6 +480,8 @@ export const NOTICES_AND_EVENTS: NoticeItem[] = [
     category: "Event",
     isImportant: true,
     description: "Our annual sports meet will be held at the school sports ground. Parents are warmly invited to cheer their little champions in fun races and drills.",
+    fullContent: "We are delighted to invite all parents, guardians, and well-wishers to our Annual Sports & Athletic Fun Meet 2026, scheduled to take place on Saturday, 28th November 2026 at the Sainthia Shishutirtha campus sports ground. Events will feature fun races (frog jump, lemon & spoon, hurdle crawl), sprint races for Class III & IV, a drill performance by Kindergarteners, and an exhibition tug-of-war for parents! Reporting time for students in their sports uniform is 8:00 AM.",
+    issuedBy: "Department of Physical Education",
     downloadUrl: "#"
   },
   {
@@ -226,6 +491,8 @@ export const NOTICES_AND_EVENTS: NoticeItem[] = [
     category: "Academic",
     isImportant: false,
     description: "Parents are requested to ensure students wear the prescribed school winter cardigan and clean badge. School morning bell rings promptly at 8:00 AM.",
+    fullContent: "With the onset of cooler weather, all parents are requested to ensure students wear the official dark green V-neck woolen cardigan embroidered with the school emblem. Full-length trousers are permitted for boys and girls of all classes during the winter months. White socks and clean black shoes are mandatory. The school morning bell rings at 8:00 AM sharp; parents are requested to ensure punctual arrival.",
+    issuedBy: "Administrative Office",
     downloadUrl: "#"
   },
   {
@@ -235,6 +502,8 @@ export const NOTICES_AND_EVENTS: NoticeItem[] = [
     category: "Event",
     isImportant: false,
     description: "Exhibition displaying handcrafted science models, nature crafts, and paintings prepared by our young innovators from Class I through IV.",
+    fullContent: "In celebration of Children's Day, our school will organize an interactive Science & Art Discovery Exhibition. Students from Class I through IV will present working models on water conservation, plant life cycles, solar energy, and indigenous clay crafts. Visiting hours for parents are 10:00 AM to 1:30 PM. Light refreshments will be provided.",
+    issuedBy: "Exhibition Committee",
     downloadUrl: "#"
   },
   {
@@ -244,6 +513,8 @@ export const NOTICES_AND_EVENTS: NoticeItem[] = [
     category: "Academic",
     isImportant: false,
     description: "One-on-one progress review for Second Term assessments. Detailed schedule slot will be provided in student communication diaries.",
+    fullContent: "The Second Term Parent-Teacher Evaluation and Progress Dialogue will be held on Tuesday, 8th December 2026. This one-on-one meeting allows class teachers and subject educators to review your child's reading fluency, numeracy confidence, peer collaboration, and diary remarks with parents. Specific time-slots will be communicated in student diaries.",
+    issuedBy: "Academic Coordination Team",
     downloadUrl: "#"
   }
 ];
@@ -316,6 +587,33 @@ export const TESTIMONIALS: Testimonial[] = [
     rating: 5
   }
 ];
+
+export const ADMISSION_DETAILS = {
+  academicSession: "2025–2026",
+  ageCriteria: [
+    { grade: "Pre-Primary / Nursery", age: "3+ Years", cutoff: "Born between 02/01/2021 and 01/01/2022" },
+    { grade: "Kindergarten (KG)", age: "4+ Years", cutoff: "Born between 02/01/2020 and 01/01/2021" },
+    { grade: "Class I", age: "6+ Years", cutoff: "Born between 02/01/2018 and 01/01/2019" },
+    { grade: "Class II", age: "7+ Years", cutoff: "Class I Passed / Equivalent" },
+    { grade: "Class III", age: "8+ Years", cutoff: "Class II Passed / Equivalent" },
+    { grade: "Class IV", age: "9+ Years", cutoff: "Class III Passed / Equivalent" }
+  ],
+  requiredDocuments: [
+    "Original & Attested Copy of Child's Birth Certificate (issued by Municipal / Gram Panchayat authority)",
+    "Three recent colored passport-size photographs of the student in formal attire",
+    "One recent passport-size photograph each of Father, Mother, or Guardian",
+    "Proof of Residence in Birbhum (Aadhaar Card, Voter ID, or Electricity Bill copy)",
+    "Previous Class Progress Report / Transfer Certificate (for Class I through IV)",
+    "Student's Blood Group Certificate / Immunization record copy"
+  ],
+  feeOverview: [
+    { head: "Registration & Prospectus Form", amount: "₹300", frequency: "One-Time (At Enquiry)" },
+    { head: "Admission & Enrolment Fee", amount: "₹3,500", frequency: "One-Time (At Admission)" },
+    { head: "Annual Development & Activity Charge", amount: "₹2,200", frequency: "Annual (April)" },
+    { head: "Monthly Tuition Fee (KG)", amount: "₹750", frequency: "Monthly" },
+    { head: "Monthly Tuition Fee (Classes I - IV)", amount: "₹850", frequency: "Monthly" }
+  ]
+};
 
 export const SAMPLE_ADMISSIONS = [
   {
