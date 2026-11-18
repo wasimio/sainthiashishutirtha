@@ -118,11 +118,66 @@ body {
   font-family: var(--font-plus-jakarta), -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
+  overflow-x: clip;
 }
 
 body[data-locale="bn"] {
   font-family: var(--font-hind-siliguri), "Hind Siliguri", sans-serif;
   line-height: 1.7;
+}
+
+/* Homepage announcement ticker: global CSS prevents CSS-in-JS scope changes
+   from changing a horizontal track into stacked block-level duplicate rows. */
+@keyframes homepage-ticker-marquee {
+  from { transform: translate3d(0, 0, 0); }
+  to { transform: translate3d(-50%, 0, 0); }
+}
+
+.homepage-ticker-viewport {
+  max-width: 100%;
+  overflow: hidden;
+}
+
+.homepage-ticker-track {
+  display: inline-flex;
+  flex-wrap: nowrap;
+  min-width: max-content;
+  will-change: transform;
+}
+
+.homepage-ticker-group,
+.homepage-ticker-item {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  white-space: nowrap;
+}
+
+.homepage-ticker-item {
+  gap: 2.5rem;
+  padding-inline: 1.5rem;
+}
+
+.homepage-ticker-track {
+  animation: homepage-ticker-marquee 28s linear infinite;
+}
+
+.homepage-ticker:hover .homepage-ticker-track,
+.homepage-ticker:focus-within .homepage-ticker-track {
+  animation-play-state: paused;
+}
+
+/* Native disclosure fallback keeps the mobile menu tappable if a preview
+   serves the HTML before its React client bundle has hydrated. */
+.mobile-navigation-panel {
+  grid-template-rows: 1fr;
+  opacity: 1;
+}
+
+nav:not(:has(.mobile-menu[open])) .mobile-navigation-panel {
+  pointer-events: none;
+  grid-template-rows: 0fr;
+  opacity: 0;
 }
 
 body[data-locale="bn"] h1,
@@ -204,6 +259,20 @@ body[data-locale="bn"] h4 {
     animation-iteration-count: 1 !important;
     scroll-behavior: auto !important;
     transition-duration: 0.01ms !important;
+  }
+
+  .homepage-ticker-viewport {
+    overflow-x: auto;
+    overscroll-behavior-inline: contain;
+  }
+
+  .homepage-ticker-track {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  .homepage-ticker-group--duplicate {
+    display: none;
   }
 }
 

@@ -77,7 +77,7 @@ export default function CmsWebsitePage({
         />
       )}
 
-      <main id="main-content" tabIndex={-1} className="flex-1 focus:outline-hidden">
+      <main id="main-content" tabIndex={-1} className="flex-1 pb-[5.5rem] focus:outline-hidden lg:pb-0">
         {beforeContent}
         {campaignIndex >= 0 ? <><CmsSectionRenderer sections={orderedSections.slice(0, campaignIndex)} settings={settings} locale={locale} showHomepageBlogPreview={false} /><HomepageCampaign campaign={homepageContent!.campaign!} /><CmsSectionRenderer sections={orderedSections.slice(campaignIndex)} settings={settings} locale={locale} showHomepageBlogPreview={home} /></> : <CmsSectionRenderer sections={orderedSections} settings={settings} locale={locale} showHomepageBlogPreview={home} />}
         {children}

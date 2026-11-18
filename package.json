@@ -7,7 +7,7 @@
     "build": "next build --webpack",
     "start": "next start",
     "lint": "eslint",
-    "test": "node --experimental-strip-types tests/locale_foundation_validation.mjs && node tests/bilingual_public_implementation.mjs && node tests/bilingual_migration_contract.mjs && node tests/public_content_safety_validation.mjs && node tests/phase1_public_isolation.mjs && node tests/public_hybrid_media_validation.mjs && node tests/test_admission_contact_workflows.mjs && node --experimental-strip-types tests/public_notice_pdf_attachments_validation.mjs && node --experimental-strip-types tests/public_blog_renderer_validation.mjs"
+    "test": "node --experimental-strip-types tests/locale_foundation_validation.mjs && node tests/bilingual_public_implementation.mjs && node tests/bilingual_migration_contract.mjs && node tests/public_content_safety_validation.mjs && node tests/phase1_public_isolation.mjs && node tests/public_hybrid_media_validation.mjs && node tests/test_admission_contact_workflows.mjs && node --experimental-strip-types tests/public_notice_pdf_attachments_validation.mjs && node --experimental-strip-types tests/public_blog_renderer_validation.mjs && node tests/mobile_homepage_responsiveness_validation.mjs"
   },
   "dependencies": {
     "@radix-ui/react-checkbox": "^1.4.1",

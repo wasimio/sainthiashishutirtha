@@ -34,7 +34,7 @@ export default function Navbar({
   const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const mobileMenuRef = useRef<HTMLDetailsElement>(null);
   const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
 
   const schoolName = settings?.school_name || SCHOOL_INFO.name;
@@ -90,7 +90,8 @@ export default function Navbar({
     const onKeyDown = (event: KeyboardEvent) => {
       if (event.key !== 'Escape' || !isMobileMenuOpen) return;
       setIsMobileMenuOpen(false);
-      window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+      if (mobileMenuRef.current) mobileMenuRef.current.open = false;
+      window.requestAnimationFrame(() => mobileMenuRef.current?.querySelector('summary')?.focus());
     };
     window.addEventListener('keydown', onKeyDown);
     return () => {
@@ -105,7 +106,10 @@ export default function Navbar({
     return () => window.cancelAnimationFrame(frame);
   }, [isMobileMenuOpen]);
 
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const closeMobileMenu = () => {
+    if (mobileMenuRef.current) mobileMenuRef.current.open = false;
+    setIsMobileMenuOpen(false);
+  };
   const englishPath = stripLocalePrefix(pathname);
   const isActive = (href: string) => {
     const target = stripLocalePrefix(href);
@@ -137,9 +141,9 @@ export default function Navbar({
         aria-label={dictionary.navigation.mainNavigation}
         className={`border-b border-warm-card-border/80 bg-warm-ivory/95 backdrop-blur-xl transition-all ${isScrolled ? 'shadow-[0_12px_35px_rgba(20,56,63,0.10)]' : ''}`}
       >
-        <div className="site-container flex min-h-[64px] items-center justify-between gap-3 py-2">
-          <Link href={getLocalePath('/', locale)} className="focus-ring group flex min-w-0 items-center gap-3 rounded-2xl">
-            <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-warm-card-border bg-white p-0.5 shadow-sm lg:h-14 lg:w-14">
+        <div className="site-container flex min-h-[64px] items-center justify-between gap-2 py-2 sm:gap-3">
+          <Link href={getLocalePath('/', locale)} className="focus-ring group flex min-w-0 flex-1 items-center gap-2 rounded-2xl sm:gap-3 lg:flex-none">
+            <span className="relative h-10 w-10 shrink-0 overflow-hidden rounded-full border border-warm-card-border bg-white p-0.5 shadow-sm sm:h-12 sm:w-12 lg:h-14 lg:w-14">
               <Image
                 src={settings?.logo_url ? resolvePublicMediaUrl(settings.logo_url) : '/logo.png'}
                 alt={`${schoolName} school seal`}
@@ -150,7 +154,7 @@ export default function Navbar({
               />
             </span>
             <span className="min-w-0">
-              <span className={`block truncate text-xs font-extrabold uppercase tracking-[-0.02em] text-text-headline transition-colors group-hover:text-terracotta sm:text-base ${locale === 'bn' ? 'font-bengali-display leading-bengali-heading' : 'font-display'}`}>
+              <span className={`block text-[11px] font-extrabold uppercase leading-[1.12] tracking-[-0.02em] text-text-headline transition-colors group-hover:text-terracotta sm:text-base sm:leading-tight ${locale === 'bn' ? 'font-bengali-display leading-bengali-heading' : 'font-display'}`}>
                 {schoolName}
               </span>
               <span className="hidden truncate text-[10px] font-semibold text-heritage-teal sm:block sm:text-[11px]">
@@ -187,29 +191,30 @@ export default function Navbar({
             </Link>
           </div>
 
-          <div className="flex shrink-0 items-center gap-2 lg:hidden">
-            <Link href={getLocalePath('/admissions', locale)} className="focus-ring whitespace-nowrap rounded-full bg-terracotta px-2.5 py-2 text-[11px] font-extrabold text-white sm:px-3 sm:text-xs">
+          <div className="flex shrink-0 items-center gap-1.5 sm:gap-2 lg:hidden">
+            <Link href={getLocalePath('/admissions', locale)} className="focus-ring inline-flex min-h-11 items-center whitespace-nowrap rounded-full bg-terracotta px-2.5 text-[11px] font-extrabold text-white sm:px-3 sm:text-xs">
               {dictionary.navigation.admissions}
             </Link>
-            <button
-              ref={mobileMenuButtonRef}
-              type="button"
-              onClick={() => setIsMobileMenuOpen((open) => !open)}
-              className="focus-ring relative grid h-11 w-11 place-items-center rounded-full border border-warm-card-border bg-white text-text-headline"
-              aria-label={isMobileMenuOpen ? dictionary.navigation.closeMenu : dictionary.navigation.openMenu}
-              aria-expanded={isMobileMenuOpen}
-              aria-controls="mobile-navigation"
-            >
+            <details ref={mobileMenuRef} className="mobile-menu relative lg:hidden" onToggle={(event) => setIsMobileMenuOpen(event.currentTarget.open)}>
+              <summary
+                className="focus-ring relative z-20 grid h-11 w-11 cursor-pointer list-none touch-manipulation place-items-center rounded-full border border-warm-card-border bg-white text-text-headline [&::-webkit-details-marker]:hidden"
+                aria-label={isMobileMenuOpen ? dictionary.navigation.closeMenu : dictionary.navigation.openMenu}
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-navigation"
+                role="button"
+                data-menu-toggle="mobile"
+              >
               <span aria-hidden="true" className="relative block h-4 w-5">
                 <span className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none ${isMobileMenuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
                 <span className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-opacity duration-150 motion-reduce:transition-none ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
                 <span className={`absolute bottom-0 left-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none ${isMobileMenuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
               </span>
-            </button>
+              </summary>
+            </details>
           </div>
         </div>
 
-        <div id="mobile-navigation" aria-label={dictionary.navigation.mobileNavigation} aria-hidden={!isMobileMenuOpen} inert={!isMobileMenuOpen} className={`grid overflow-hidden border-t border-warm-card-border bg-warm-ivory shadow-2xl transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none lg:hidden ${isMobileMenuOpen ? 'grid-rows-[1fr] opacity-100' : 'pointer-events-none grid-rows-[0fr] opacity-0'}`}>
+        <div id="mobile-navigation" aria-label={dictionary.navigation.mobileNavigation} className="mobile-navigation-panel relative z-10 grid overflow-hidden border-t border-warm-card-border bg-warm-ivory shadow-2xl transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none lg:hidden">
           <div className="min-h-0 overflow-hidden">
             <div className="px-4 pb-8 pt-4">
               <div className="mx-auto grid max-w-xl grid-cols-2 gap-2">
