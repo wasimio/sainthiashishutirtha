@@ -37,12 +37,21 @@ export default function AdminDashboardPage() {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Prototype Alert Notice */}
-        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex items-start gap-3 shadow-xs">
-          <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm text-amber-900">
-            <strong>Administrator Prototype Preview:</strong> This control panel illustrates administrative visibility over enrollment, daily attendance metrics, and admission pipelines for Sainthia Shishutirtha. Sample data displayed is purely illustrative.
+        {/* Prototype Alert Notice with Canonical Link */}
+        <div className="bg-amber-50 border-l-4 border-amber-500 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm text-amber-900">
+              <strong>Legacy Prototype Route:</strong> You are viewing the legacy prototype at <code className="bg-amber-100 px-1 py-0.5 rounded font-mono">/admin</code>. The production-standardized portal is located at <strong className="font-mono">/portal/admin</strong>.
+            </div>
           </div>
+          <Link
+            href="/portal/admin"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-amber-600 hover:bg-amber-700 text-white rounded-lg text-xs font-bold shrink-0 transition-colors"
+          >
+            <span>Open /portal/admin</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Top Metric Cards */}

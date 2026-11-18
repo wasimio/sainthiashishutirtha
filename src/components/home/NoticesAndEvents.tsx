@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Link from 'next/link';
 import {
   Bell,
@@ -16,10 +16,46 @@ import { NOTICES_AND_EVENTS, NoticeItem } from '@/data/schoolData';
 export default function NoticesAndEvents() {
   const [selectedNotice, setSelectedNotice] = useState<NoticeItem | null>(null);
   const [filterType, setFilterType] = useState<'All' | 'Notice' | 'Event' | 'Academic'>('All');
+  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
 
   const filteredItems = filterType === 'All'
     ? NOTICES_AND_EVENTS
     : NOTICES_AND_EVENTS.filter((item) => item.category === filterType);
+
+  // Focus restoration & body scroll locking when notice modal is active
+  useEffect(() => {
+    if (selectedNotice) {
+      previouslyFocusedElement.current = document.activeElement as HTMLElement;
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        const closeBtn = document.getElementById('homeNoticeCloseBtn');
+        if (closeBtn) {
+          closeBtn.focus();
+        }
+      });
+    } else {
+      document.body.style.overflow = '';
+      if (previouslyFocusedElement.current && typeof previouslyFocusedElement.current.focus === 'function') {
+        previouslyFocusedElement.current.focus();
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedNotice]);
+
+  // Handle Escape key to close notice modal
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedNotice) {
+        setSelectedNotice(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedNotice]);
 
   return (
     <section id="notices" className="py-16 sm:py-24 bg-white border-b border-slate-200">
@@ -40,13 +76,14 @@ export default function NoticesAndEvents() {
           </div>
 
           {/* Filter tabs */}
-          <div className="flex flex-wrap items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2" role="group" aria-label="Notice category filter">
             {(['All', 'Notice', 'Event', 'Academic'] as const).map((type) => (
               <button
                 key={type}
                 type="button"
+                aria-pressed={filterType === type}
                 onClick={() => setFilterType(type)}
-                className={`px-3.5 py-1.5 rounded-xl text-xs font-bold transition-all ${
+                className={`px-4 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] ${
                   filterType === type
                     ? 'bg-[#308599] text-white shadow-xs'
                     : 'bg-slate-100 text-slate-600 hover:text-[#243B43]'
@@ -61,10 +98,12 @@ export default function NoticesAndEvents() {
         {/* Notices Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredItems.map((notice) => (
-            <div
+            <button
               key={notice.id}
+              type="button"
               onClick={() => setSelectedNotice(notice)}
-              className={`p-6 rounded-3xl border-2 transition-all cursor-pointer flex flex-col justify-between group ${
+              aria-label={`View notice: ${notice.title} (${notice.category})`}
+              className={`w-full text-left p-6 rounded-3xl border-2 transition-all cursor-pointer flex flex-col justify-between group focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] ${
                 notice.isImportant
                   ? 'border-amber-200 bg-amber-50/40 hover:border-amber-400 hover:shadow-md'
                   : 'border-slate-200 bg-white hover:border-[#A5D1DC] hover:shadow-sm'
@@ -113,7 +152,7 @@ export default function NoticesAndEvents() {
                 <span>Read Full Circular</span>
                 <ChevronRight className="w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -121,7 +160,7 @@ export default function NoticesAndEvents() {
         <div className="mt-12 text-center">
           <Link
             href="/notices"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#EAF5F7] hover:bg-[#A5D1DC]/40 text-[#308599] border border-[#A5D1DC] text-xs sm:text-sm font-bold rounded-xl shadow-2xs hover:shadow-sm transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-[#EAF5F7] hover:bg-[#A5D1DC]/40 text-[#308599] border border-[#A5D1DC] text-xs sm:text-sm font-bold rounded-xl shadow-2xs hover:shadow-sm transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599]"
           >
             <span>View All Official Circulars & Archive</span>
             <ArrowRight className="w-4 h-4" />
@@ -131,6 +170,9 @@ export default function NoticesAndEvents() {
         {/* Notice Details Modal */}
         {selectedNotice && (
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="homeNoticeModalTitle"
             className="fixed inset-0 z-50 bg-black/60 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
             onClick={() => setSelectedNotice(null)}
           >
@@ -139,9 +181,10 @@ export default function NoticesAndEvents() {
               onClick={(e) => e.stopPropagation()}
             >
               <button
+                id="homeNoticeCloseBtn"
                 type="button"
                 onClick={() => setSelectedNotice(null)}
-                className="absolute top-5 right-5 p-2 rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors"
+                className="absolute top-4 right-4 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full hover:bg-slate-100 text-slate-400 hover:text-slate-700 transition-colors flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] cursor-pointer"
                 aria-label="Close modal"
               >
                 <X className="w-5 h-5" />
@@ -157,7 +200,7 @@ export default function NoticesAndEvents() {
                 </div>
               </div>
 
-              <h3 className="text-xl font-bold text-[#243B43] leading-snug">
+              <h3 id="homeNoticeModalTitle" className="text-xl font-bold text-[#243B43] leading-snug">
                 {selectedNotice.title}
               </h3>
 
@@ -168,13 +211,13 @@ export default function NoticesAndEvents() {
                 </p>
               </div>
 
-              <div className="flex items-center justify-between pt-2">
+              <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 pt-2">
                 <button
                   type="button"
                   onClick={() => {
                     alert(`Simulated PDF Download: ${selectedNotice.title}.pdf`);
                   }}
-                  className="inline-flex items-center gap-2 px-4 py-2.5 bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors"
+                  className="inline-flex items-center justify-center gap-2 px-4 py-3 min-h-[48px] bg-slate-100 hover:bg-slate-200 text-slate-700 text-xs font-semibold rounded-xl transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] cursor-pointer"
                 >
                   <Download className="w-4 h-4 text-[#308599]" />
                   <span>Download Circular PDF</span>
@@ -183,7 +226,7 @@ export default function NoticesAndEvents() {
                 <button
                   type="button"
                   onClick={() => setSelectedNotice(null)}
-                  className="px-5 py-2.5 bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-xl transition-colors"
+                  className="px-6 py-3 min-h-[48px] bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-xl transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] cursor-pointer"
                 >
                   Close
                 </button>

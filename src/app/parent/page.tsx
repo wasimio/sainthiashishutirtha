@@ -33,12 +33,21 @@ export default function ParentDashboardPage() {
       />
 
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-8">
-        {/* Prototype Alert Notice */}
-        <div className="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl flex items-start gap-3 shadow-xs">
-          <AlertCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
-          <div className="text-xs sm:text-sm text-emerald-950">
-            <strong>Parent Portal Prototype Preview:</strong> This screen previews the student profile, daily schedule, teacher notes, homework tracker, and attendance records available to enrolled families. Demonstrating sample data for fictional student <strong>Aarav Sen (Class II-B)</strong>.
+        {/* Prototype Alert Notice with Canonical Link */}
+        <div className="bg-emerald-50 border-l-4 border-emerald-500 p-4 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 shadow-xs">
+          <div className="flex items-start gap-3">
+            <AlertCircle className="w-5 h-5 text-emerald-600 shrink-0 mt-0.5" />
+            <div className="text-xs sm:text-sm text-emerald-950">
+              <strong>Legacy Prototype Route:</strong> You are viewing the legacy prototype at <code className="bg-emerald-100 px-1 py-0.5 rounded font-mono">/parent</code>. The production-standardized portal with sibling switching is located at <strong className="font-mono">/portal/parent</strong>.
+            </div>
           </div>
+          <Link
+            href="/portal/parent"
+            className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg text-xs font-bold shrink-0 transition-colors"
+          >
+            <span>Open /portal/parent</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </Link>
         </div>
 
         {/* Student Profile Identity Card */}

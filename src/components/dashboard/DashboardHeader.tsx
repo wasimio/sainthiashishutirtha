@@ -113,8 +113,16 @@ export default function DashboardHeader({ role, title, subtitle }: DashboardHead
                 </Link>
 
                 <Link
+                  href="/portal/council"
+                  className="px-3 py-1.5 rounded-lg font-medium bg-[#308599]/40 hover:bg-[#308599]/60 text-sky-100 border border-[#A5D1DC]/40 transition-all flex items-center gap-1.5"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>Council Portal</span>
+                </Link>
+
+                <Link
                   href="/parent"
-                  className="px-3 py-1.5 rounded-lg font-medium bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 transition-all flex items-center gap-1.5 ml-2"
+                  className="px-3 py-1.5 rounded-lg font-medium bg-emerald-500/20 hover:bg-emerald-500/30 text-emerald-300 border border-emerald-500/30 transition-all flex items-center gap-1.5 ml-1"
                 >
                   <UserCheck className="w-3.5 h-3.5" />
                   <span>Switch to Parent Portal</span>
@@ -159,8 +167,16 @@ export default function DashboardHeader({ role, title, subtitle }: DashboardHead
                 </Link>
 
                 <Link
+                  href="/portal/council"
+                  className="px-3 py-1.5 rounded-lg font-medium bg-[#308599]/40 hover:bg-[#308599]/60 text-sky-100 border border-[#A5D1DC]/40 transition-all flex items-center gap-1.5 ml-1"
+                >
+                  <Shield className="w-3.5 h-3.5" />
+                  <span>Council Portal</span>
+                </Link>
+
+                <Link
                   href="/admin"
-                  className="px-3 py-1.5 rounded-lg font-medium bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-all flex items-center gap-1.5 ml-2"
+                  className="px-3 py-1.5 rounded-lg font-medium bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border border-amber-500/30 transition-all flex items-center gap-1.5 ml-1"
                 >
                   <Shield className="w-3.5 h-3.5" />
                   <span>Switch to Admin</span>

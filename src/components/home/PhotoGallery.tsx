@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Camera, X, ZoomIn, ArrowRight } from 'lucide-react';
@@ -9,12 +9,48 @@ import { GALLERY_PHOTOS, GalleryPhoto } from '@/data/schoolData';
 export default function PhotoGallery() {
   const [activeFilter, setActiveFilter] = useState<string>('All');
   const [selectedPhoto, setSelectedPhoto] = useState<GalleryPhoto | null>(null);
+  const previouslyFocusedElement = useRef<HTMLElement | null>(null);
 
   const categories = ['All', 'Classroom', 'Sports', 'Culture', 'Arts'];
 
   const filteredPhotos = activeFilter === 'All'
     ? GALLERY_PHOTOS
     : GALLERY_PHOTOS.filter((p) => p.category === activeFilter);
+
+  // Focus restoration & body scroll locking when lightbox is active
+  useEffect(() => {
+    if (selectedPhoto) {
+      previouslyFocusedElement.current = document.activeElement as HTMLElement;
+      document.body.style.overflow = 'hidden';
+
+      requestAnimationFrame(() => {
+        const closeBtn = document.getElementById('homeLightboxClose');
+        if (closeBtn) {
+          closeBtn.focus();
+        }
+      });
+    } else {
+      document.body.style.overflow = '';
+      if (previouslyFocusedElement.current && typeof previouslyFocusedElement.current.focus === 'function') {
+        previouslyFocusedElement.current.focus();
+      }
+    }
+
+    return () => {
+      document.body.style.overflow = '';
+    };
+  }, [selectedPhoto]);
+
+  // Handle Escape key to close lightbox
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape' && selectedPhoto) {
+        setSelectedPhoto(null);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [selectedPhoto]);
 
   return (
     <section id="gallery" className="py-16 sm:py-24 bg-[#EAF5F7]/30 border-b border-slate-200">
@@ -33,13 +69,14 @@ export default function PhotoGallery() {
           </p>
 
           {/* Filter Pills */}
-          <div className="flex flex-wrap items-center justify-center gap-2 pt-4">
+          <div className="flex flex-wrap items-center justify-center gap-2 pt-4" role="group" aria-label="Campus photo categories">
             {categories.map((cat) => (
               <button
                 key={cat}
                 type="button"
+                aria-pressed={activeFilter === cat}
                 onClick={() => setActiveFilter(cat)}
-                className={`px-4 py-2 rounded-xl text-xs font-bold transition-all ${
+                className={`px-4 py-2 min-h-[40px] rounded-xl text-xs font-bold transition-all cursor-pointer focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599] ${
                   activeFilter === cat
                     ? 'bg-[#308599] text-white shadow-sm'
                     : 'bg-white text-slate-600 hover:text-[#243B43] border border-slate-200'
@@ -54,21 +91,24 @@ export default function PhotoGallery() {
         {/* Photos Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
           {filteredPhotos.map((photo) => (
-            <div
+            <button
               key={photo.id}
+              type="button"
               onClick={() => setSelectedPhoto(photo)}
-              className="group relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 cursor-pointer shadow-xs hover:shadow-lg transition-all border border-slate-200"
+              aria-label={`View enlarged photo: ${photo.title} (${photo.category})`}
+              className="w-full text-left group relative rounded-2xl overflow-hidden aspect-[4/3] bg-slate-100 cursor-pointer shadow-xs hover:shadow-lg transition-all border border-slate-200 focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599]"
             >
               <Image
                 src={photo.imageUrl}
                 alt={photo.title}
                 fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                sizes="(max-width: 640px) calc(100vw - 2rem), (max-width: 1024px) 50vw, 420px"
+                loading="lazy"
                 className="object-cover group-hover:scale-105 transition-transform duration-300"
               />
 
               {/* Hover Overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-5 text-white">
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent opacity-0 group-hover:opacity-100 group-focus-visible:opacity-100 transition-opacity duration-200 flex flex-col justify-end p-5 text-white">
                 <span className="text-[10px] uppercase font-bold text-amber-300 tracking-wider">
                   {photo.category}
                 </span>
@@ -83,7 +123,7 @@ export default function PhotoGallery() {
                   <span>Click to view larger</span>
                 </div>
               </div>
-            </div>
+            </button>
           ))}
         </div>
 
@@ -91,7 +131,7 @@ export default function PhotoGallery() {
         <div className="mt-12 text-center">
           <Link
             href="/gallery"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-white hover:bg-[#EAF5F7] text-[#308599] border border-[#A5D1DC] text-xs sm:text-sm font-bold rounded-xl shadow-2xs hover:shadow-sm transition-all"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-white hover:bg-[#EAF5F7] text-[#308599] border border-[#A5D1DC] text-xs sm:text-sm font-bold rounded-xl shadow-2xs hover:shadow-sm transition-all focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599]"
           >
             <span>View Full Campus Photo Gallery</span>
             <ArrowRight className="w-4 h-4" />
@@ -101,6 +141,10 @@ export default function PhotoGallery() {
         {/* Lightbox Modal */}
         {selectedPhoto && (
           <div
+            role="dialog"
+            aria-modal="true"
+            aria-labelledby="homeLightboxTitle"
+            aria-describedby="homeLightboxDesc"
             className="fixed inset-0 z-50 bg-black/80 backdrop-blur-xs flex items-center justify-center p-4 animate-in fade-in duration-150"
             onClick={() => setSelectedPhoto(null)}
           >
@@ -109,9 +153,10 @@ export default function PhotoGallery() {
               onClick={(e) => e.stopPropagation()}
             >
               <button
+                id="homeLightboxClose"
                 type="button"
                 onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 z-10 p-2 rounded-full bg-black/60 text-white hover:bg-black transition-colors"
+                className="absolute top-4 right-4 z-10 w-11 h-11 min-w-[44px] min-h-[44px] rounded-full bg-black/60 text-white hover:bg-black transition-colors flex items-center justify-center focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-white cursor-pointer"
                 aria-label="Close photo preview"
               >
                 <X className="w-5 h-5" />
@@ -122,7 +167,7 @@ export default function PhotoGallery() {
                   src={selectedPhoto.imageUrl}
                   alt={selectedPhoto.title}
                   fill
-                  sizes="100vw"
+                  sizes="(max-width: 768px) 100vw, 768px"
                   className="object-contain"
                 />
               </div>
@@ -131,10 +176,10 @@ export default function PhotoGallery() {
                 <span className="text-xs font-bold text-[#308599] uppercase tracking-wider">
                   {selectedPhoto.category}
                 </span>
-                <h3 className="text-lg font-bold text-[#243B43]">
+                <h3 id="homeLightboxTitle" className="text-lg font-bold text-[#243B43]">
                   {selectedPhoto.title}
                 </h3>
-                <p className="text-xs sm:text-sm text-slate-600 leading-relaxed">
+                <p id="homeLightboxDesc" className="text-xs sm:text-sm text-slate-600 leading-relaxed">
                   {selectedPhoto.caption}
                 </p>
               </div>

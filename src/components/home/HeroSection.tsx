@@ -1,138 +1,48 @@
 'use client';
 
-import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import {
-  Sparkles,
-  ArrowRight,
-  ShieldCheck,
-  CheckCircle2,
-  BookOpen
-} from 'lucide-react';
-import { SCHOOL_INFO } from '@/data/schoolData';
+import { ArrowRight, BookOpen, CheckCircle2, ShieldCheck, Sparkles } from 'lucide-react';
+import type { PublishedSchoolSettings, WebsiteSectionRow } from '@/lib/cms/contentService';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/locales';
+import { getLocalePath } from '@/lib/i18n/routing';
+import { resolvePublicMediaUrl } from '@/lib/media/resolveMediaUrl';
 
-interface HeroSectionProps {
-  onOpenAdmissionModal?: () => void;
-}
+interface HeroSectionProps { section?: WebsiteSectionRow | null; settings?: PublishedSchoolSettings | null; locale?: Locale; }
+const text = (content: Record<string, unknown>, key: string) => typeof content[key] === 'string' ? content[key].trim() : '';
+const isVideo = (url: string, mediaType: string) => mediaType === 'video' || /\.(mp4|webm|ogg)(?:$|[?#])/i.test(url);
+function focalPosition(value: string) { return /^(left|center|right)(\s+(top|center|bottom))?$/.test(value) || /^\d{1,3}%\s+\d{1,3}%$/.test(value) ? value : 'center'; }
 
-export default function HeroSection({ onOpenAdmissionModal }: HeroSectionProps) {
-  return (
-    <section className="relative overflow-hidden bg-gradient-to-b from-[#EAF5F7]/60 via-[#EAF5F7]/20 to-white py-12 lg:py-16">
-      <div className="site-container">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Column: School Messaging & Purposeful Actions */}
-          <div className="lg:col-span-7 space-y-6 text-left">
-            {/* School Trust & Identity Pill */}
-            <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white border border-[#A5D1DC] shadow-2xs text-xs">
-              <span className="flex items-center gap-1.5 font-bold text-[#308599]">
-                <ShieldCheck className="w-4 h-4 text-emerald-600" />
-                <span>Foundational Excellence Since {SCHOOL_INFO.estdYear}</span>
-              </span>
-              <span className="text-slate-300">•</span>
-              <span className="text-slate-600 font-medium">Sainthia, Birbhum</span>
-            </div>
+/** A CMS-only hero: no invented copy or stock imagery is rendered as school content. */
+export default function HeroSection({ section, locale = DEFAULT_LOCALE }: HeroSectionProps) {
+  const content = (section?.content_json as Record<string, unknown>) || {};
+  const heading = text(content, 'heading') || section?.title || '';
+  const highlightedText = text(content, 'highlighted_text');
+  const description = text(content, 'description') || text(content, 'subheading') || section?.subtitle || '';
+  const mediaUrl = text(content, 'media_url') || text(content, 'image_url');
+  const resolvedMediaUrl = mediaUrl ? resolvePublicMediaUrl(mediaUrl) : '';
+  const layout = text(content, 'hero_layout') === 'background' || text(content, 'layout_variant') === 'background' ? 'background' : 'split';
+  const alignment = ['left', 'center', 'right'].includes(text(content, 'alignment')) ? text(content, 'alignment') : 'left';
+  const overlay = Math.min(90, Math.max(0, Number(content.overlay_strength) || (layout === 'background' ? 58 : 0)));
+  const primaryLabel = text(content, 'primary_cta_label') || text(content, 'cta_text') || (locale === 'bn' ? 'ভর্তি সম্পর্কে জানুন' : 'Admission Enquiry');
+  const primaryUrl = text(content, 'primary_cta_url') || text(content, 'cta_url') || '/admissions';
+  const secondaryLabel = text(content, 'secondary_cta_label') || (locale === 'bn' ? 'আমাদের সম্পর্কে' : 'About the School');
+  const secondaryUrl = text(content, 'secondary_cta_url') || '/about';
+  const highlights = Array.isArray(content.highlights) ? content.highlights.filter((item): item is string => typeof item === 'string' && item.trim().length > 0) : [];
+  const contentAlignment = alignment === 'center' ? 'items-center text-center' : alignment === 'right' ? 'items-end text-right' : 'items-start text-left';
+  const title = highlightedText && heading.includes(highlightedText) ? <>{heading.split(highlightedText)[0]}<span className="text-terracotta">{highlightedText}</span>{heading.split(highlightedText).slice(1).join(highlightedText)}</> : heading;
+  const media = resolvedMediaUrl ? (isVideo(resolvedMediaUrl, text(content, 'media_type')) ? <video className="h-full w-full object-cover" autoPlay muted loop playsInline preload="metadata" aria-label={text(content, 'media_alt') || text(content, 'image_alt') || heading}><source src={resolvedMediaUrl} /></video> : <Image src={resolvedMediaUrl} alt={text(content, 'media_alt') || text(content, 'image_alt') || heading} fill priority sizes="(max-width: 1024px) 100vw, 48vw" unoptimized className="object-cover" style={{ objectPosition: focalPosition(text(content, 'focal_position')) }} />) : null;
 
-            {/* Headline */}
-            <div className="space-y-3">
-              <h1 className="text-3xl sm:text-4xl md:text-5xl font-black text-[#243B43] tracking-tight leading-[1.18] font-sans">
-                Where Young Minds{' '}
-                <span className="text-[#308599]">
-                  Blossom with Joy
-                </span>
-                , Curiosity & Values
-              </h1>
-              <p className="text-sm sm:text-base text-slate-700 leading-relaxed max-w-2xl">
-                Sainthia Shishutirtha provides a safe, nurturing educational haven for children from <strong>Kindergarten through Class IV</strong>. Combining play-based discovery with disciplined foundational literacy and dual-language fluency.
-              </p>
-            </div>
-
-            {/* Trust Highlights Checklist */}
-            <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 pt-1">
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>Play-Based Learning</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>18:1 Small Class Ratio</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>Bilingual Fluency</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>Safe Monitored Campus</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>Spacious Green Play Area</span>
-              </div>
-              <div className="flex items-center gap-2 text-xs font-semibold text-[#243B43]">
-                <CheckCircle2 className="w-4 h-4 text-[#308599] shrink-0" />
-                <span>Arts & Creative Expression</span>
-              </div>
-            </div>
-
-            {/* Two Purposeful Actions */}
-            <div className="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-3.5">
-              {onOpenAdmissionModal ? (
-                <button
-                  type="button"
-                  onClick={onOpenAdmissionModal}
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#308599] hover:bg-[#266b7b] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all transform active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Explore Admissions</span>
-                  <ArrowRight className="w-4 h-4" />
-                </button>
-              ) : (
-                <Link
-                  href="/admissions"
-                  className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-[#308599] hover:bg-[#266b7b] text-white text-xs sm:text-sm font-bold rounded-xl shadow-md hover:shadow-lg transition-all transform active:scale-95"
-                >
-                  <Sparkles className="w-4 h-4 text-amber-300" />
-                  <span>Explore Admissions</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              )}
-
-              <Link
-                href="/about"
-                className="inline-flex items-center justify-center gap-2 px-6 py-3.5 bg-white hover:bg-[#EAF5F7] text-[#243B43] border border-slate-300 hover:border-[#308599] text-xs sm:text-sm font-bold rounded-xl transition-all"
-              >
-                <BookOpen className="w-4 h-4 text-[#308599]" />
-                <span>Discover Our School</span>
-              </Link>
-            </div>
-          </div>
-
-          {/* Right Column: Clean Photographic Presentation */}
-          <div className="lg:col-span-5">
-            <div className="relative rounded-3xl overflow-hidden shadow-xl border-4 border-white bg-slate-100 aspect-[4/3] lg:aspect-[5/4]">
-              <Image
-                src="https://images.unsplash.com/photo-1509062522246-3755977927d7?auto=format&fit=crop&w=1000&q=80"
-                alt="Interactive primary classroom learning environment"
-                fill
-                sizes="(max-width: 1024px) 100vw, 45vw"
-                priority
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-
-              <div className="absolute bottom-4 left-4 right-4 text-white">
-                <span className="text-[10px] font-bold uppercase tracking-wider text-[#A5D1DC] block">
-                  Foundational Primary Education
-                </span>
-                <p className="text-xs sm:text-sm font-medium leading-snug mt-0.5">
-                  Nurturing curiosity, phonics, and friendship in an unhurried early childhood environment.
-                </p>
-              </div>
-            </div>
-          </div>
-        </div>
+  return <section className={`relative overflow-hidden ${layout === 'background' ? 'min-h-[38rem] bg-heritage-teal py-20 sm:min-h-[42rem]' : 'bg-[linear-gradient(135deg,#FDFBF7_0%,#E8F2F3_100%)] py-14 sm:py-20 lg:py-24'}`}>
+    {layout === 'background' && media ? <div className="absolute inset-0">{media}<div className="absolute inset-0 bg-[#14383F]" style={{ opacity: overlay / 100 }} /></div> : null}
+    <div className={`site-container relative ${layout === 'background' ? 'flex min-h-[28rem] items-center' : ''}`}><div className={layout === 'split' ? 'grid items-center gap-10 lg:grid-cols-[minmax(0,1.1fr)_minmax(20rem,.9fr)]' : 'w-full'}>
+      <div className={`flex max-w-3xl flex-col gap-6 ${contentAlignment} ${layout === 'background' ? 'text-white' : ''}`}>
+        {text(content, 'badge') && <span className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-1.5 text-xs font-bold ${layout === 'background' ? 'border-white/25 bg-white/10 text-white' : 'border-heritage-teal/20 bg-white/80 text-heritage-teal'}`}><ShieldCheck className="h-4 w-4" />{text(content, 'badge')}</span>}
+        <div className="space-y-3"><h1 className={`text-fluid-hero font-display font-bold tracking-[-0.045em] ${layout === 'background' ? 'text-white' : 'text-text-headline'}`}>{title}</h1>{description && <p className={`max-w-2xl text-fluid-body leading-relaxed ${layout === 'background' ? 'text-white/90' : 'text-text-muted'}`}>{description}</p>}</div>
+        {highlights.length > 0 && <div className="flex flex-wrap gap-x-5 gap-y-2">{highlights.map((item) => <span key={item} className="inline-flex items-center gap-2 text-sm font-semibold"><CheckCircle2 className="h-4 w-4 text-mustard" />{item}</span>)}</div>}
+        <div className="flex flex-col gap-3 sm:flex-row"><Link href={getLocalePath(primaryUrl, locale)} className="focus-ring inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full bg-terracotta px-7 py-3.5 text-sm font-extrabold text-white shadow-lg transition hover:-translate-y-0.5 hover:bg-terracotta-hover"><Sparkles className="h-4 w-4 text-amber-300" />{primaryLabel}<ArrowRight className="h-4 w-4" /></Link><Link href={getLocalePath(secondaryUrl, locale)} className={`focus-ring inline-flex min-h-[50px] items-center justify-center gap-2 rounded-full border px-7 py-3.5 text-sm font-extrabold transition hover:-translate-y-0.5 ${layout === 'background' ? 'border-white/35 bg-white/10 text-white hover:bg-white/20' : 'border-warm-card-border bg-white text-text-headline hover:bg-heritage-teal-subtle'}`}><BookOpen className="h-4 w-4" />{secondaryLabel}</Link></div>
       </div>
-    </section>
-  );
+      {layout === 'split' && <div className="relative aspect-[5/4] overflow-hidden rounded-[2rem] border-[6px] border-white bg-heritage-teal-subtle shadow-[0_28px_80px_rgba(20,56,63,0.22)]">{media || <div className="grid h-full place-items-center p-8 text-center text-sm font-semibold text-heritage-teal">Hero media can be added from the CMS.</div>}</div>}
+    </div></div>
+  </section>;
 }

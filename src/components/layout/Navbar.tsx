@@ -1,237 +1,243 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
-import Link from 'next/link';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import {
-  Menu,
-  X,
-  Phone,
-  MapPin,
-  Clock,
-  Sparkles,
-  LogIn
-} from 'lucide-react';
+import { Clock3, MapPin, Phone } from 'lucide-react';
+import LanguageSwitcher from '@/components/i18n/LanguageSwitcher';
 import { SCHOOL_INFO } from '@/data/schoolData';
+import { getUiDictionary } from '@/lib/i18n/dictionaries';
+import { DEFAULT_LOCALE, type Locale } from '@/lib/i18n/locales';
+import { getLocalePath, stripLocalePrefix } from '@/lib/i18n/routing';
+import { resolvePublicMediaUrl } from '@/lib/media/resolveMediaUrl';
+import type { PublishedNavigationItem, PublishedSchoolSettings } from '@/lib/cms/contentService';
 
 interface NavbarProps {
-  onOpenAdmissionModal?: () => void;
+  settings?: PublishedSchoolSettings | null;
+  navigation?: PublishedNavigationItem[] | null;
+  locale?: Locale;
+  availableLocales?: readonly Locale[];
+  localePaths?: Partial<Record<Locale, string>>;
 }
 
-export default function Navbar({ onOpenAdmissionModal }: NavbarProps) {
+interface NavItem { label: string; href: string; isExternal?: boolean; target?: string }
+
+export default function Navbar({
+  settings,
+  navigation,
+  locale = DEFAULT_LOCALE,
+  availableLocales = [DEFAULT_LOCALE],
+  localePaths,
+}: NavbarProps) {
+  const dictionary = getUiDictionary(locale);
+  const pathname = usePathname();
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isScrolled, setIsScrolled] = useState(false);
-  const pathname = usePathname();
+  const mobileMenuButtonRef = useRef<HTMLButtonElement>(null);
+  const firstMobileLinkRef = useRef<HTMLAnchorElement>(null);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+  const schoolName = settings?.school_name || SCHOOL_INFO.name;
+  const phone = (settings?.official_phone || settings?.primary_phone || SCHOOL_INFO.phone).split('/')[0].trim();
+  const city = settings?.city || 'Sainthia';
+  const campusAddress = settings?.campus_address
+    ? `${settings.campus_address.split(',')[0].trim()}, ${city}`
+    : `Saradishpally, ${city}`;
+  const officeHours = settings?.office_hours || SCHOOL_INFO.officeHours;
+  const classesOffered = settings?.classes_offered || SCHOOL_INFO.classesOffered;
+  const estdYear = settings?.estd_year || SCHOOL_INFO.estdYear;
 
-  const [prevPathname, setPrevPathname] = useState(pathname);
-  if (prevPathname !== pathname) {
-    setPrevPathname(pathname);
-    setIsMobileMenuOpen(false);
-  }
-
-  const navLinks = [
-    { label: 'Home', href: '/' },
-    { label: 'About', href: '/about' },
-    { label: 'Academics', href: '/academics' },
-    { label: 'Faculty', href: '/faculty' },
-    { label: 'Facilities', href: '/facilities' },
-    { label: 'Gallery', href: '/gallery' },
-    { label: 'Admissions', href: '/admissions' },
-    { label: 'Notices', href: '/notices' },
-    { label: 'Contact', href: '/contact' },
+  const fallbackNavigation: NavItem[] = [
+    { label: dictionary.navigation.home, href: '/' },
+    { label: dictionary.navigation.about, href: '/about' },
+    { label: dictionary.navigation.academics, href: '/academics' },
+    { label: dictionary.navigation.faculty, href: '/faculty' },
+    { label: dictionary.navigation.facilities, href: '/facilities' },
+    { label: dictionary.navigation.gallery, href: '/gallery' },
+    { label: dictionary.navigation.blog, href: '/blog' },
+    { label: dictionary.navigation.notices, href: '/notices' },
+    { label: dictionary.navigation.contact, href: '/contact' },
   ];
 
-  const isLinkActive = (href: string) => {
-    if (href === '/') return pathname === '/';
-    return pathname.startsWith(href);
+  const navLinks = useMemo<NavItem[]>(() => {
+    const source = navigation?.length
+      ? navigation.filter((item) => item.is_published).sort((a, b) => a.sort_order - b.sort_order).map((item) => ({
+          label: item.label,
+          href: item.url,
+          isExternal: item.is_external,
+          target: item.target || (item.is_external ? '_blank' : '_self'),
+        }))
+      : fallbackNavigation;
+    if (!source.some((item) => !item.isExternal && stripLocalePrefix(item.href) === '/blog')) {
+      source.push({ label: dictionary.navigation.blog, href: '/blog' });
+    }
+    return source.map((item) => ({
+      ...item,
+      href: item.isExternal ? item.href : getLocalePath(item.href, locale),
+    }));
+  // The dictionary and CMS navigation are stable for a route render.
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [navigation, locale]);
+
+  useEffect(() => {
+    const onScroll = () => setIsScrolled(window.scrollY > 24);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
+
+  useEffect(() => {
+    document.body.style.overflow = isMobileMenuOpen ? 'hidden' : '';
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key !== 'Escape' || !isMobileMenuOpen) return;
+      setIsMobileMenuOpen(false);
+      window.requestAnimationFrame(() => mobileMenuButtonRef.current?.focus());
+    };
+    window.addEventListener('keydown', onKeyDown);
+    return () => {
+      document.body.style.overflow = '';
+      window.removeEventListener('keydown', onKeyDown);
+    };
+  }, [isMobileMenuOpen]);
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return;
+    const frame = window.requestAnimationFrame(() => firstMobileLinkRef.current?.focus());
+    return () => window.cancelAnimationFrame(frame);
+  }, [isMobileMenuOpen]);
+
+  const closeMobileMenu = () => setIsMobileMenuOpen(false);
+  const englishPath = stripLocalePrefix(pathname);
+  const isActive = (href: string) => {
+    const target = stripLocalePrefix(href);
+    return target === '/' ? englishPath === '/' : englishPath === target || englishPath.startsWith(`${target}/`);
   };
 
-  const primaryPhone = SCHOOL_INFO.phone.split('/')[0].trim();
-
   return (
-    <header className="sticky top-0 z-40 bg-white">
-      {/* Top Utility Strip */}
-      <div className="bg-[#243B43] text-white text-xs border-b border-[#308599]/30">
-        <div className="site-container py-1.5 flex items-center justify-between gap-4">
-          <div className="flex items-center gap-4 text-[11px] text-slate-300">
-            <span className="inline-flex items-center gap-1.5">
-              <MapPin className="w-3.5 h-3.5 text-[#A5D1DC]" />
-              <span>Sainthia, Birbhum, W.B.</span>
+    <header className="sticky top-0 z-50">
+      <div className="border-b border-white/10 bg-heritage-teal text-white">
+        <div className="site-container flex min-h-8 items-center justify-between gap-3 py-1 text-[11px]">
+          <div className="flex min-w-0 items-center gap-4 text-white/80">
+            <span className="inline-flex min-w-0 items-center gap-1.5">
+              <MapPin aria-hidden="true" className="h-3.5 w-3.5 shrink-0 text-mustard" />
+              <span className="truncate">{campusAddress}</span>
             </span>
-            <span className="hidden sm:inline text-slate-500">•</span>
-            <span className="hidden sm:inline-flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#A5D1DC]" />
-              <span>Mon – Sat: 8:00 AM – 2:00 PM</span>
+            <span className="hidden items-center gap-1.5 md:inline-flex">
+              <Clock3 aria-hidden="true" className="h-3.5 w-3.5 text-mustard" />
+              {officeHours}
             </span>
-            <span className="hidden md:inline text-slate-500">•</span>
-            <a
-              href={`tel:${primaryPhone}`}
-              className="hidden md:inline-flex items-center gap-1.5 hover:text-[#A5D1DC] transition-colors"
-            >
-              <Phone className="w-3.5 h-3.5 text-[#A5D1DC]" />
-              <span>Helpline: {primaryPhone}</span>
-            </a>
           </div>
-
-          <div className="flex items-center gap-3 text-[11px]">
-            <Link
-              href="/login"
-              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-md bg-white/10 hover:bg-white/20 text-slate-200 hover:text-white font-medium transition-colors"
-            >
-              <LogIn className="w-3 h-3 text-[#A5D1DC]" />
-              <span>Portal Sign-In</span>
-            </Link>
-          </div>
+          <a href={`tel:${phone}`} className="inline-flex shrink-0 items-center gap-1.5 font-semibold text-white hover:text-mustard">
+            <Phone aria-hidden="true" className="h-3.5 w-3.5" />
+            <span className="hidden sm:inline">{dictionary.navigation.helpline}:</span> {phone}
+          </a>
         </div>
       </div>
 
-      {/* Main Navbar */}
       <nav
-        aria-label="Main Navigation"
-        className={`transition-all duration-200 border-b ${
-          isScrolled
-            ? 'bg-white/95 backdrop-blur-md shadow-sm border-slate-200 py-2.5'
-            : 'bg-white border-slate-100 py-3.5'
-        }`}
+        aria-label={dictionary.navigation.mainNavigation}
+        className={`border-b border-warm-card-border/80 bg-warm-ivory/95 backdrop-blur-xl transition-all ${isScrolled ? 'shadow-[0_12px_35px_rgba(20,56,63,0.10)]' : ''}`}
       >
-        <div className="site-container flex items-center justify-between gap-4">
-          {/* Logo & Institution Branding */}
-          <Link
-            href="/"
-            className="flex items-center gap-3 text-left shrink-0 group focus:outline-hidden focus:ring-2 focus:ring-[#308599] rounded-xl p-1"
-          >
-            <div className="relative w-12 h-12 sm:w-14 sm:h-14 shrink-0 rounded-full overflow-hidden border-2 border-[#308599]/30 group-hover:border-[#308599] transition-colors bg-white">
+        <div className="site-container flex min-h-[64px] items-center justify-between gap-3 py-2">
+          <Link href={getLocalePath('/', locale)} className="focus-ring group flex min-w-0 items-center gap-3 rounded-2xl">
+            <span className="relative h-12 w-12 shrink-0 overflow-hidden rounded-full border border-warm-card-border bg-white p-0.5 shadow-sm lg:h-14 lg:w-14">
               <Image
-                src="/logo.png"
-                alt="Sainthia Shishutirtha School Seal"
-                width={56}
-                height={56}
+                src={settings?.logo_url ? resolvePublicMediaUrl(settings.logo_url) : '/logo.png'}
+                alt={`${schoolName} school seal`}
+                fill
                 priority
-                className="w-full h-full object-contain p-0.5"
+                unoptimized={Boolean(settings?.logo_url)}
+                className="object-contain"
               />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-base sm:text-lg font-extrabold text-[#243B43] tracking-tight group-hover:text-[#308599] transition-colors uppercase leading-tight font-sans">
-                Sainthia Shishutirtha
+            </span>
+            <span className="min-w-0">
+              <span className={`block truncate text-xs font-extrabold uppercase tracking-[-0.02em] text-text-headline transition-colors group-hover:text-terracotta sm:text-base ${locale === 'bn' ? 'font-bengali-display leading-bengali-heading' : 'font-display'}`}>
+                {schoolName}
               </span>
-              <span className="text-[11px] font-semibold text-[#308599] leading-tight">
-                Primary & Foundational School (KG – Class IV)
+              <span className="hidden truncate text-[10px] font-semibold text-heritage-teal sm:block sm:text-[11px]">
+                {dictionary.navigation.schoolDescriptor} · {classesOffered}
               </span>
-              <span className="text-[10px] text-slate-400 leading-tight hidden sm:block">
-                Estd. 2013 • Sainthia, District Birbhum
+              <span className="hidden text-[10px] text-text-subtle md:block">
+                {dictionary.navigation.established} {estdYear} · {city}
               </span>
-            </div>
+            </span>
           </Link>
 
-          {/* Desktop Navigation Links */}
-          <div className="hidden xl:flex items-center gap-1 text-[13px] font-semibold text-[#243B43]">
-            {navLinks.map((link) => {
-              const active = isLinkActive(link.href);
-              return (
-                <Link
-                  key={link.label}
-                  href={link.href}
-                  className={`px-3 py-2 rounded-lg transition-all relative ${
-                    active
-                      ? 'text-[#308599] bg-[#EAF5F7] font-bold'
-                      : 'hover:text-[#308599] hover:bg-slate-50 text-slate-700'
-                  }`}
-                >
-                  {link.label}
-                  {active && (
-                    <span className="absolute bottom-0 left-3 right-3 h-0.5 bg-[#308599] rounded-full" />
-                  )}
-                </Link>
-              );
-            })}
+          <div className="hidden min-w-0 flex-1 items-center justify-center gap-0.5 xl:flex">
+            {navLinks.map((link) => (
+              <Link
+                key={`${link.label}-${link.href}`}
+                href={link.href}
+                target={link.target}
+                rel={link.target === '_blank' ? 'noopener noreferrer' : undefined}
+                aria-current={isActive(link.href) ? 'page' : undefined}
+                className={`focus-ring whitespace-nowrap rounded-full px-2 py-1.5 text-[11px] font-bold transition-colors ${isActive(link.href) ? 'bg-heritage-teal text-white' : 'text-text-body hover:bg-terracotta-subtle hover:text-terracotta'}`}
+              >
+                {link.label}
+              </Link>
+            ))}
           </div>
 
-          {/* Header Action: Admissions CTA */}
-          <div className="hidden md:flex items-center gap-3">
+          <div className="hidden items-center gap-2 lg:flex">
+            <LanguageSwitcher locale={locale} pathname={pathname} availableLocales={availableLocales} localePaths={localePaths} />
             <Link
-              href="/admissions"
-              className="inline-flex items-center gap-2 px-4 py-2.5 bg-[#308599] hover:bg-[#266b7b] text-white text-xs font-bold rounded-xl shadow-xs hover:shadow transition-all transform active:scale-95"
+              href={getLocalePath('/admissions', locale)}
+              className="focus-ring inline-flex min-h-11 items-center rounded-full bg-heritage-teal px-5 text-xs font-extrabold text-white shadow-[0_8px_22px_rgba(20,56,63,0.24)] transition hover:-translate-y-0.5 hover:bg-heritage-teal-hover"
             >
-              <Sparkles className="w-3.5 h-3.5 text-amber-300" />
-              <span>Admissions 2025–26</span>
+              {dictionary.actions.applyNow}
             </Link>
           </div>
 
-          {/* Mobile Menu Button */}
-          <div className="flex items-center gap-2 xl:hidden">
-            <Link
-              href="/admissions"
-              className="md:hidden px-3 py-1.5 bg-[#308599] text-white text-xs font-bold rounded-lg shadow-xs"
-            >
-              Admissions
+          <div className="flex shrink-0 items-center gap-2 lg:hidden">
+            <Link href={getLocalePath('/admissions', locale)} className="focus-ring whitespace-nowrap rounded-full bg-terracotta px-2.5 py-2 text-[11px] font-extrabold text-white sm:px-3 sm:text-xs">
+              {dictionary.navigation.admissions}
             </Link>
-
             <button
+              ref={mobileMenuButtonRef}
               type="button"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="p-2 rounded-xl text-slate-700 hover:bg-slate-100 hover:text-[#243B43] focus:outline-hidden focus:ring-2 focus:ring-[#308599]"
-              aria-label={isMobileMenuOpen ? "Close menu" : "Open navigation menu"}
+              onClick={() => setIsMobileMenuOpen((open) => !open)}
+              className="focus-ring relative grid h-11 w-11 place-items-center rounded-full border border-warm-card-border bg-white text-text-headline"
+              aria-label={isMobileMenuOpen ? dictionary.navigation.closeMenu : dictionary.navigation.openMenu}
               aria-expanded={isMobileMenuOpen}
+              aria-controls="mobile-navigation"
             >
-              {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
+              <span aria-hidden="true" className="relative block h-4 w-5">
+                <span className={`absolute left-0 top-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none ${isMobileMenuOpen ? 'translate-y-[7px] rotate-45' : ''}`} />
+                <span className={`absolute left-0 top-[7px] h-0.5 w-5 rounded-full bg-current transition-opacity duration-150 motion-reduce:transition-none ${isMobileMenuOpen ? 'opacity-0' : 'opacity-100'}`} />
+                <span className={`absolute bottom-0 left-0 h-0.5 w-5 rounded-full bg-current transition-transform duration-200 motion-reduce:transition-none ${isMobileMenuOpen ? '-translate-y-[7px] -rotate-45' : ''}`} />
+              </span>
             </button>
           </div>
         </div>
 
-        {/* Mobile Navigation Drawer */}
-        {isMobileMenuOpen && (
-          <div className="xl:hidden bg-white border-t border-slate-100 px-4 pt-3 pb-6 shadow-xl animate-in fade-in slide-in-from-top-2 duration-150">
-            <div className="space-y-1">
-              {navLinks.map((link) => {
-                const active = isLinkActive(link.href);
-                return (
-                  <Link
-                    key={link.label}
-                    href={link.href}
-                    className={`block px-3 py-2.5 rounded-xl text-sm font-semibold transition-colors ${
-                      active
-                        ? 'bg-[#EAF5F7] text-[#308599] font-bold'
-                        : 'text-slate-700 hover:bg-slate-50'
-                    }`}
-                  >
-                    {link.label}
-                  </Link>
-                );
-              })}
-            </div>
-
-            <div className="pt-4 border-t border-slate-100 mt-3 space-y-2">
-              <Link
-                href="/login"
-                className="w-full py-2.5 px-3 bg-slate-100 hover:bg-slate-200 text-[#243B43] text-xs font-bold rounded-xl flex items-center justify-center gap-2 transition-colors"
-              >
-                <LogIn className="w-4 h-4 text-[#308599]" />
-                <span>Portal Sign-In</span>
+        <div id="mobile-navigation" aria-label={dictionary.navigation.mobileNavigation} aria-hidden={!isMobileMenuOpen} inert={!isMobileMenuOpen} className={`grid overflow-hidden border-t border-warm-card-border bg-warm-ivory shadow-2xl transition-[grid-template-rows,opacity] duration-200 ease-out motion-reduce:transition-none lg:hidden ${isMobileMenuOpen ? 'grid-rows-[1fr] opacity-100' : 'pointer-events-none grid-rows-[0fr] opacity-0'}`}>
+          <div className="min-h-0 overflow-hidden">
+            <div className="px-4 pb-8 pt-4">
+              <div className="mx-auto grid max-w-xl grid-cols-2 gap-2">
+              {navLinks.map((link) => (
+                <Link
+                  key={`${link.label}-${link.href}`}
+                  ref={link === navLinks[0] ? firstMobileLinkRef : undefined}
+                  href={link.href}
+                  target={link.target}
+                  onClick={closeMobileMenu}
+                  className={`focus-ring flex min-h-12 items-center rounded-2xl px-4 text-sm font-bold ${isActive(link.href) ? 'bg-heritage-teal text-white' : 'border border-warm-card-border bg-white text-text-body'}`}
+                >
+                  {link.label}
+                </Link>
+              ))}
+              </div>
+              <div className="mx-auto mt-4 flex max-w-xl flex-col gap-2 border-t border-warm-card-border pt-4">
+              <LanguageSwitcher locale={locale} pathname={pathname} availableLocales={availableLocales} localePaths={localePaths} />
+              <Link href={getLocalePath('/admissions', locale)} onClick={closeMobileMenu} className="focus-ring flex min-h-12 items-center justify-center rounded-2xl bg-terracotta px-5 text-sm font-extrabold text-white">
+                {dictionary.navigation.quickEnquiry}
               </Link>
-
-              <button
-                type="button"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  onOpenAdmissionModal?.();
-                }}
-                className="w-full py-3 bg-[#308599] text-white text-xs font-bold rounded-xl shadow-xs text-center flex items-center justify-center gap-2"
-              >
-                <Sparkles className="w-4 h-4 text-amber-300" />
-                <span>Quick Admission Enquiry</span>
-              </button>
+              <a href={`tel:${phone}`} className="focus-ring flex min-h-12 items-center justify-center rounded-2xl bg-heritage-teal-subtle px-5 text-sm font-bold text-heritage-teal">
+                {dictionary.navigation.helpline}: {phone}
+              </a>
+              </div>
             </div>
           </div>
-        )}
+        </div>
       </nav>
     </header>
   );

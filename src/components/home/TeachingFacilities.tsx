@@ -1,5 +1,3 @@
-'use client';
-
 import React from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
@@ -41,7 +39,8 @@ export default function TeachingFacilities() {
                   src={facility.image}
                   alt={facility.title}
                   fill
-                  sizes="(max-width: 768px) 100vw, 50vw"
+                  sizes="(max-width: 768px) calc(100vw - 2rem), 640px"
+                  loading="lazy"
                   className="object-cover group-hover:scale-105 transition-transform duration-300"
                 />
                 <div className="absolute top-3.5 left-3.5 bg-[#243B43]/85 text-white text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-md backdrop-blur-xs">
@@ -74,7 +73,7 @@ export default function TeachingFacilities() {
         <div className="text-center pt-2">
           <Link
             href="/facilities"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-[#308599] hover:bg-[#266b7b] text-white rounded-xl text-xs font-bold shadow-xs transition-colors"
+            className="inline-flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] bg-[#308599] hover:bg-[#266b7b] text-white rounded-xl text-xs sm:text-sm font-bold shadow-xs transition-colors focus-visible:outline-hidden focus-visible:ring-2 focus-visible:ring-[#308599]"
           >
             <ShieldCheck className="w-4 h-4" />
             <span>View All Campus Facilities & Safety Standards</span>

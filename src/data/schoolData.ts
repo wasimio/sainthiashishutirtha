@@ -55,6 +55,8 @@ export interface Facility {
   features: string[];
 }
 
+import type { NoticeAttachmentItem } from '@/lib/media/resolveMediaUrl';
+
 export interface NoticeItem {
   id: string;
   title: string;
@@ -65,6 +67,7 @@ export interface NoticeItem {
   fullContent?: string;
   issuedBy?: string;
   downloadUrl?: string;
+  attachments?: NoticeAttachmentItem[];
 }
 
 export interface GalleryPhoto {
@@ -84,29 +87,67 @@ export interface Testimonial {
 }
 
 export const SCHOOL_INFO = {
-  name: "Sainthia Shishutirtha",
+  name: "Sainthia Shishu Tirtha",
   tagline: "Inspiring Curiosity • Building Character • Nurturing Potential",
-  subheading: "A Premier Early Childhood & Primary School (KG to Class IV)",
-  affiliation: "Govt. Registered S/2L/14754 OF 2013-14",
+  subheading: "Pre-Primary & Primary School (Lower Nursery through Class V)",
+  affiliation: "WBBPE • Govt. Registered S/2L/14754 OF 2013-14",
   udiseNo: "19082200103",
   estdYear: "2013",
-  address: "Sainthia Town, District Birbhum, West Bengal — 731234",
-  phone: "+91 94740 12345 / +91 97320 67890",
+  address: "Saradishpally, opposite Reliance Smart Point, Ward 1, Sainthia, Birbhum, West Bengal, 731234",
+  phone: "9153336315 / 8926769992",
+  primaryPhone: "9153336315",
+  secondaryPhone: "8926769992",
   email: "info@sainthiashishutirtha.org",
-  officeHours: "Monday to Friday: 8:00 AM – 2:30 PM | Saturday: 8:00 AM – 12:30 PM",
+  officeHours: "Summer: 6:30 AM – 10:00 AM | Winter: 7:30 AM – 11:00 AM",
+  summerTiming: "6:30 AM – 10:00 AM",
+  winterTiming: "7:30 AM – 11:00 AM",
   studentTeacherRatio: "18:1",
   totalStudents: "340+",
-  classesOffered: "Kindergarten (KG) to Class IV",
+  classesOffered: "Lower Nursery through Class V",
+};
+
+export const VERIFIED_CLASSES = [
+  { name: 'Lower Nursery', code: 'LN', wing: 'Early Childhood', order: 1 },
+  { name: 'U.N.', code: 'UN', wing: 'Early Childhood', order: 2 },
+  { name: 'KG', code: 'KG', wing: 'Pre-Primary', order: 3 },
+  { name: 'Class I', code: 'CLS-1', wing: 'Junior Primary', order: 4 },
+  { name: 'Class II', code: 'CLS-2', wing: 'Junior Primary', order: 5 },
+  { name: 'Class III', code: 'CLS-3', wing: 'Senior Primary', order: 6 },
+  { name: 'Class IV', code: 'CLS-4', wing: 'Senior Primary', order: 7 },
+  { name: 'Class V', code: 'CLS-5', wing: 'Senior Primary', order: 8 },
+] as const;
+
+export const HANDBOOK_CURRICULUM = {
+  lowerNursery: {
+    subjects: ['Bengali', 'English', 'Math', 'GK (Oral)'],
+    eca: ['Drawing', 'Song', 'Dance', 'P.T.']
+  },
+  un: {
+    subjects: ['Bengali', 'English', 'Math', 'GK'],
+    eca: ['Drawing', 'Song', 'Dance', 'P.T.']
+  },
+  kg: {
+    subjects: ['Bengali', 'English', 'Hindi', 'Math', 'GK'],
+    eca: ['Drawing', 'Song', 'Dance', 'P.T.']
+  },
+  class1_2: {
+    subjects: ['Bengali', 'English', 'Hindi', 'Math', 'Science', 'History', 'Geography', 'Envs', 'GK', 'Computer'],
+    eca: ['Drawing', 'Song', 'Dance', 'P.T.']
+  },
+  class3_5: {
+    subjects: ['Bengali', 'English', 'Math', 'GK', 'Science', 'History', 'Geography', 'Envs', 'Computer'],
+    eca: ['Drawing', 'Song', 'Dance', 'P.T.', 'Recitation', 'Acting']
+  }
 };
 
 export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
   {
     id: "pre-primary-kg",
     slug: "pre-primary-kg",
-    name: "Pre-Primary & Kindergarten (KG)",
-    gradeRange: "Nursery to KG",
+    name: "Early Childhood & Pre-Primary (Lower Nursery to KG)",
+    gradeRange: "Lower Nursery to KG",
     ageGroup: "3 to 5 Years",
-    timing: "8:30 AM – 11:45 AM",
+    timing: "Summer: 6:30 AM – 10:00 AM | Winter: 7:30 AM – 11:00 AM",
     description: "A joyful, sensory-rich play-and-learn foundation where toddlers discover phonics, colors, numbers, sharing, and self-expression through guided storytelling and play.",
     highlights: [
       "Activity-based Montessori sensory materials",
@@ -114,7 +155,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
       "Fine motor coordination & outdoor sand play",
       "Daily circle time, nursery rhymes & puppetry"
     ],
-    keySubjects: ["Foundational Phonics", "Early Numeracy", "Rhymes & Rhythm", "Creative Art & Play", "General Awareness"],
+    keySubjects: ["Bengali", "English", "Mathematics", "General Knowledge (Oral)", "Creative Art & Play"],
     badgeColor: "bg-amber-100 text-amber-800 border-amber-200",
     iconName: "Sparkles"
   },
@@ -124,25 +165,25 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
     name: "Junior Primary (Class I & Class II)",
     gradeRange: "Class I – Class II",
     ageGroup: "6 to 7 Years",
-    timing: "8:00 AM – 1:00 PM",
+    timing: "Summer: 6:30 AM – 10:00 AM | Winter: 7:30 AM – 11:00 AM",
     description: "Transitioning natural curiosity into foundational reading, handwriting fluency, mathematical logic, and hands-on environmental exploration with zero stressful testing.",
     highlights: [
       "Structured reading corners and cursive handwriting",
       "Conceptual mental math & interactive number games",
-      "Environmental Science (EVS) through nature walks",
+      "Environmental Science (Envs) through nature walks",
       "Basic computer literacy & smart-board storytelling"
     ],
-    keySubjects: ["English Literature & Grammar", "Bengali / Hindi First Language", "Mathematics", "Environmental Studies (EVS)", "General Knowledge & Drawing"],
+    keySubjects: ["Bengali", "English", "Hindi", "Mathematics", "Science", "History", "Geography", "Envs", "Computer"],
     badgeColor: "bg-teal-100 text-teal-800 border-teal-200",
     iconName: "BookOpen"
   },
   {
     id: "senior-primary-class-3-4",
     slug: "senior-primary",
-    name: "Senior Primary (Class III & Class IV)",
-    gradeRange: "Class III – Class IV",
-    ageGroup: "8 to 10 Years",
-    timing: "8:00 AM – 1:30 PM",
+    name: "Senior Primary (Class III through Class V)",
+    gradeRange: "Class III – Class V",
+    ageGroup: "8 to 11 Years",
+    timing: "Summer: 6:30 AM – 10:00 AM | Winter: 7:30 AM – 11:00 AM",
     description: "Empowering children with critical thinking, bilingual fluency, creative writing, scientific inquiry, and seamless preparation for entrance to leading secondary institutions.",
     highlights: [
       "Independent problem-solving & weekly science experiments",
@@ -150,7 +191,7 @@ export const ACADEMIC_PROGRAMS: AcademicProgram[] = [
       "Foundational computer concepts & digital etiquette",
       "Sports, yoga, physical training & moral value sessions"
     ],
-    keySubjects: ["English Literature & Applied Grammar", "First Language (Bengali / Hindi)", "Mathematics & Mental Arithmetic", "Science & Nature Exploration", "Social Studies", "Computer Studies", "Arts & Physical Education"],
+    keySubjects: ["Bengali", "English", "Mathematics", "General Knowledge", "Science", "History", "Geography", "Envs", "Computer"],
     badgeColor: "bg-cyan-100 text-cyan-800 border-cyan-200",
     iconName: "GraduationCap"
   }
